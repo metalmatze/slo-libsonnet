@@ -1,0 +1,24 @@
+{
+    "dependencies": [
+        {
+            "name": "grafonnet",
+            "source": {
+                "git": {
+                    "remote": "https://github.com/grafana/grafonnet-lib",
+                    "subdir": "grafonnet"
+                }
+            },
+            "version": "a6896d19aedc46ecf80dd64967191b9fd6f75f45"
+        },
+        {
+            "name": "grafana-builder",
+            "source": {
+                "git": {
+                    "remote": "https://github.com/kausalco/public",
+                    "subdir": "grafana-builder"
+                }
+            },
+            "version": "a73d6c3e7f5804fc7a16f592b42a62384605046c"
+        }
+    ]
+}
