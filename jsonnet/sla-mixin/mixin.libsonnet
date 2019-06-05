@@ -27,5 +27,48 @@
         severity: 'critical',
       },
     },
+
+    grafana: {
+      gauge: {
+        datasource: '$datasource',
+        options: {
+          maxValue: '1.5', // TODO might need to be configurable
+          minValue: 0,
+          thresholds: [
+            {
+              color: 'green',
+              index: 0,
+              value: null,
+            },
+            {
+              color: '#EAB839',
+              index: 1,
+              value: slo.warning,
+            },
+            {
+              color: 'red',
+              index: 2,
+              value: slo.critical,
+            },
+          ],
+          valueOptions: {
+            decimals: null,
+            stat: 'last',
+            unit: 'dtdurations',
+          },
+        },
+        targets: [
+          {
+            expr: '%s{quantile="%.2f"}' % [
+              recordingrule.record,
+              slo.quantile,
+            ],
+            format: 'time_series',
+          },
+        ],
+        title: 'P99 Latency',
+        type: 'gauge',
+      },
+    },
   },
 }
