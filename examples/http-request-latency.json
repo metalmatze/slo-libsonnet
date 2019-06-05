@@ -1,0 +1,25 @@
+{
+   "alerts": [
+      {
+         "expr": "prometheus_http_request_duration_seconds:histogram_quantile > 0.500",
+         "for": "5m",
+         "labels": {
+            "severity": "warning"
+         }
+      },
+      {
+         "expr": "prometheus_http_request_duration_seconds:histogram_quantile > 1.000",
+         "for": "5m",
+         "labels": {
+            "severity": "critical"
+         }
+      }
+   ],
+   "recordingrule": {
+      "expr": "histogram_quantile(0.99, sum(rate(prometheus_http_request_duration_seconds_bucket[5m])) by (le))",
+      "labels": {
+         "quantile": "0.99"
+      },
+      "record": "prometheus_http_request_duration_seconds:histogram_quantile"
+   }
+}
