@@ -15,6 +15,43 @@
          }
       }
    ],
+   "gauge": {
+      "datasource": "$datasource",
+      "options": {
+         "maxValue": "1.5",
+         "minValue": 0,
+         "thresholds": [
+            {
+               "color": "green",
+               "index": 0,
+               "value": null
+            },
+            {
+               "color": "#EAB839",
+               "index": 1,
+               "value": 0.5
+            },
+            {
+               "color": "red",
+               "index": 2,
+               "value": 1
+            }
+         ],
+         "valueOptions": {
+            "decimals": null,
+            "stat": "last",
+            "unit": "dtdurations"
+         }
+      },
+      "targets": [
+         {
+            "expr": "prometheus_http_request_duration_seconds:histogram_quantile{quantile=\"0.99\"}",
+            "format": "time_series"
+         }
+      ],
+      "title": "P99 Latency",
+      "type": "gauge"
+   },
    "recordingrule": {
       "expr": "histogram_quantile(0.99, sum(rate(prometheus_http_request_duration_seconds_bucket[5m])) by (le))",
       "labels": {

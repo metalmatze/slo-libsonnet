@@ -15,4 +15,6 @@ local slo = import '../jsonnet/sla-mixin/mixin.libsonnet';
     latency.alertWarning,
     latency.alertCritical,
   ],
+
+  gauge: latency.grafana.gauge,
 }
