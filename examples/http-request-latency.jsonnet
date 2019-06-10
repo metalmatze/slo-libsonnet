@@ -7,6 +7,8 @@ local slo = import '../slo-libsonnet/slo.libsonnet';
 
     warning: 0.500,  // 500ms
     critical: 1.0,  // 1s
+    jobSelector: 'fooapp',
+    namespaceSelector: 'default',
   }),
 
   // Output these as example
