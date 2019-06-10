@@ -1,7 +1,9 @@
 {
   errors(slo):: {
     local recordingrule = {
-      expr: 'sum(rate(%s{%s}[10m])) BY (code)' % [
+      expr: |||
+        sum(rate(%s{%s}[10m])) BY (code)
+      ||| % [
         slo.metric,
         slo.selectors,
       ],
@@ -10,7 +12,13 @@
     recordingrule: recordingrule,
 
     alertWarning: {
-      expr: '%s{code!~"2.."} * 100 / %s > %s' % [recordingrule.record, recordingrule.record, slo.warning],
+      expr: |||
+        %s{code!~"2.."} * 100 / %s > %s
+      ||| % [
+        recordingrule.record,
+        recordingrule.record,
+        slo.warning,
+      ],
       'for': '5m',
       labels: {
         severity: 'warning',
@@ -70,21 +78,26 @@
   },
 
   latency(slo):: {
-    local recordingrule = {
-      expr: 'histogram_quantile(%.2f, sum(rate(%s_bucket{%s}[5m])) by (le))' % [
-        slo.quantile,
+    recordingrule(quantile=slo.quantile):: {
+      expr: |||
+        histogram_quantile(%.2f, sum(rate(%s_bucket{%s}[5m])) by (le))
+      ||| % [
+        quantile,
         slo.metric,
         slo.selectors,
       ],
       record: '%s:histogram_quantile' % slo.metric,
       labels: {
-        quantile: '%.2f' % slo.quantile,
+        quantile: '%.2f' % quantile,
       },
     },
-    recordingrule: recordingrule,
+
+    local _recordingrule = self.recordingrule(),
 
     alertWarning: {
-      expr: '%s > %.3f' % [recordingrule.record, slo.warning],
+      expr: |||
+        %s > %.3f
+      ||| % [_recordingrule.record, slo.warning],
       'for': '5m',
       labels: {
         severity: 'warning',
@@ -92,7 +105,9 @@
     },
 
     alertCritical: {
-      expr: '%s > %.3f' % [recordingrule.record, slo.critical],
+      expr: |||
+        %s > %.3f
+      ||| % [_recordingrule.record, slo.critical],
       'for': '5m',
       labels: {
         severity: 'critical',
@@ -131,7 +146,7 @@
         targets: [
           {
             expr: '%s{quantile="%.2f"}' % [
-              recordingrule.record,
+              _recordingrule.record,
               slo.quantile,
             ],
             format: 'time_series',

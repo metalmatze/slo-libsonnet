@@ -3,15 +3,15 @@ local slo = import '../slo-libsonnet/slo.libsonnet';
 {
   local latency = slo.latency({
     metric: 'prometheus_http_request_duration_seconds',
+    selectors: 'namespace="default",job="fooapp"',
     quantile: 0.99,
 
     warning: 0.500,  // 500ms
     critical: 1.0,  // 1s
-    selectors: 'namespace="default",job="fooapp"',
   }),
 
   // Output these as example
-  recordingrule: latency.recordingrule,
+  recordingrule: latency.recordingrule(),
   alerts: [
     latency.alertWarning,
     latency.alertCritical,
