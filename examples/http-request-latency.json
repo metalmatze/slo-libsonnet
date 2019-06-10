@@ -53,7 +53,7 @@
       "type": "gauge"
    },
    "recordingrule": {
-      "expr": "histogram_quantile(0.99, sum(rate(prometheus_http_request_duration_seconds_bucket{defaultfooapp}[5m])) by (le))",
+      "expr": "histogram_quantile(0.99, sum(rate(prometheus_http_request_duration_seconds_bucket{namespace=\"default\",job=\"fooapp\"}[5m])) by (le))",
       "labels": {
          "quantile": "0.99"
       },

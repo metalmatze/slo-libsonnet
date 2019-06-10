@@ -71,7 +71,7 @@
 
   latency(slo):: {
     local recordingrule = {
-      expr: 'histogram_quantile(%.2f, sum(rate(%s_bucket{%s%s}[5m])) by (le))' % [
+      expr: 'histogram_quantile(%.2f, sum(rate(%s_bucket{%s}[5m])) by (le))' % [
         slo.quantile,
         slo.metric,
         slo.selectors,
