@@ -1,4 +1,4 @@
-local slo = import '../jsonnet/sla-mixin/mixin.libsonnet';
+local slo = import '../slo-libsonnet/slo.libsonnet';
 
 {
   local latency = slo.latency({
