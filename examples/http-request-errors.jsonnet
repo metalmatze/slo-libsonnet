@@ -6,7 +6,7 @@ local slo = import '../jsonnet/sla-mixin/mixin.libsonnet';
     warning: 5,  // 5% of total requests
     critical: 10,  // 10% of total requests
     jobSelector: 'job: fooapp',
-    namespaceSelector: 'namespace: default',
+    selectors: 'namespace="default",job="fooapp"',
   }),
 
   // Output these as example
