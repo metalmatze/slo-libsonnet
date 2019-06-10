@@ -1,11 +1,10 @@
-local slo = import '../jsonnet/sla-mixin/mixin.libsonnet';
+local slo = import '../slo-libsonnet/slo.libsonnet';
 
 {
   local errors = slo.errors({
     metric: 'promhttp_metric_handler_requests_total',
     warning: 5,  // 5% of total requests
     critical: 10,  // 10% of total requests
-    jobSelector: 'job: fooapp',
     selectors: 'namespace="default",job="fooapp"',
   }),
 

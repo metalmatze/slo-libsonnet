@@ -1,20 +1,16 @@
 {
   errors(slo):: {
     local recordingrule = {
-      expr: 'histogram_quantile(%.2f, sum(rate(%s_bucket{%s}[5m])) by (le))' % [
-        slo.quantile,
+      expr: 'sum(rate(%s{%s}[10m])) BY (code)' % [
         slo.metric,
-        slo.jobSelector,
+        slo.selectors,
       ],
-      record: '%s:histogram_quantile' % slo.metric,
-      labels: {
-        quantile: '%.2f' % slo.quantile,
-      },
+      record: 'code:%s:rate:sum' % slo.metric,
     },
     recordingrule: recordingrule,
 
     alertWarning: {
-      expr: '%s > %.3f' % [recordingrule.record, slo.warning],
+      expr: '%s{code!~"2.."} * 100 / %s > %s' % [recordingrule.record, recordingrule.record, slo.warning],
       'for': '5m',
       labels: {
         severity: 'warning',
@@ -22,7 +18,7 @@
     },
 
     alertCritical: {
-      expr: '%s > %.3f' % [recordingrule.record, slo.critical],
+      expr: '%s{code!~"2.."} * 100 / %s > %s' % [recordingrule.record, recordingrule.record, slo.critical],
       'for': '5m',
       labels: {
         severity: 'critical',
@@ -33,7 +29,7 @@
       gauge: {
         datasource: '$datasource',
         options: {
-          maxValue: '1.5', // TODO might need to be configurable
+          maxValue: '1.5',  // TODO might need to be configurable
           minValue: 0,
           thresholds: [
             {
@@ -78,8 +74,7 @@
       expr: 'histogram_quantile(%.2f, sum(rate(%s_bucket{%s%s}[5m])) by (le))' % [
         slo.quantile,
         slo.metric,
-        slo.namespaceSelector,
-        slo.jobSelector
+        slo.selectors,
       ],
       record: '%s:histogram_quantile' % slo.metric,
       labels: {
@@ -108,7 +103,7 @@
       gauge: {
         datasource: '$datasource',
         options: {
-          maxValue: '1.5', // TODO might need to be configurable
+          maxValue: '1.5',  // TODO might need to be configurable
           minValue: 0,
           thresholds: [
             {
