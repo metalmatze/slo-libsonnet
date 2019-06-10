@@ -18,4 +18,5 @@ local slo = import '../slo-libsonnet/slo.libsonnet';
   ],
 
   gauge: latency.grafana.gauge,
+  graph: latency.grafana.graph,
 }

@@ -52,6 +52,66 @@
       "title": "P99 Latency",
       "type": "gauge"
    },
+   "graph": {
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "$datasource",
+      "fill": 2,
+      "lines": true,
+      "linewidth": 1,
+      "paceLength": 10,
+      "pointradius": 2,
+      "points": false,
+      "targets": [
+         {
+            "expr": "max(prometheus_http_request_duration_seconds:histogram_quantile) by (quantile)",
+            "legendFormat": "{{ quantile }}"
+         }
+      ],
+      "thresholds": [
+         {
+            "colorMode": "warning",
+            "fill": true,
+            "line": true,
+            "op": "gt",
+            "value": 0.5,
+            "yaxis": "left"
+         },
+         {
+            "colorMode": "critical",
+            "fill": true,
+            "line": true,
+            "op": "gt",
+            "value": 1,
+            "yaxis": "left"
+         }
+      ],
+      "title": "Reqeust Latency",
+      "type": "graph",
+      "xaxis": {
+         "buckets": null,
+         "mode": "time",
+         "name": null,
+         "show": true,
+         "values": [ ]
+      },
+      "yaxes": [
+         {
+            "decimals": 1,
+            "format": "s",
+            "max": null,
+            "min": "0",
+            "show": true
+         },
+         {
+            "show": false
+         }
+      ],
+      "yaxis": {
+         "align": false,
+         "alignLevel": null
+      }
+   },
    "recordingrule": {
       "expr": "histogram_quantile(0.99, sum(rate(prometheus_http_request_duration_seconds_bucket{namespace=\"default\",job=\"fooapp\"}[5m])) by (le))\n",
       "labels": {

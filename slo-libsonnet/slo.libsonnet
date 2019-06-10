@@ -116,6 +116,8 @@
 
     grafana: {
       gauge: {
+        type: 'gauge',
+        title: 'P99 Latency',
         datasource: '$datasource',
         options: {
           maxValue: '1.5',  // TODO might need to be configurable
@@ -152,8 +154,66 @@
             format: 'time_series',
           },
         ],
-        title: 'P99 Latency',
-        type: 'gauge',
+      },
+      graph: {
+        type: 'graph',
+        title: 'Reqeust Latency',
+        datasource: '$datasource',
+        targets: [
+          {
+            expr: 'max(%s) by (quantile)' % _recordingrule.record,
+            legendFormat: '{{ quantile }}',
+          },
+        ],
+        yaxes: [
+          {
+            show: true,
+            min: '0',
+            max: null,
+            format: 's',
+            decimals: 1,
+          },
+          {
+            show: false,
+          },
+        ],
+        xaxis: {
+          show: true,
+          mode: 'time',
+          name: null,
+          values: [],
+          buckets: null,
+        },
+        yaxis: {
+          align: false,
+          alignLevel: null,
+        },
+        lines: true,
+        fill: 2,
+        linewidth: 1,
+        dashes: false,
+        dashLength: 10,
+        paceLength: 10,
+        points: false,
+        pointradius: 2,
+        thresholds: [
+          {
+            value: slo.warning,
+            colorMode: 'warning',
+            op: 'gt',
+            fill: true,
+            line: true,
+            yaxis: 'left',
+          },
+          {
+            value: slo.critical,
+            colorMode: 'critical',
+            op: 'gt',
+            fill: true,
+            line: true,
+            yaxis: 'left',
+          },
+        ],
       },
     },
   },
