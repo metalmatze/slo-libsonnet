@@ -157,7 +157,7 @@
       },
       graph: {
         type: 'graph',
-        title: 'Reqeust Latency',
+        title: 'Request Latency',
         datasource: '$datasource',
         targets: [
           {

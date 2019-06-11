@@ -91,7 +91,7 @@
                      "yaxis": "left"
                   }
                ],
-               "title": "Reqeust Latency",
+               "title": "Request Latency",
                "type": "graph",
                "xaxis": {
                   "buckets": null,
