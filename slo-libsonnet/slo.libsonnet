@@ -34,45 +34,41 @@
     },
 
     grafana: {
-      gauge: {
+      graph: {
+        aliasColors: {
+          'code:201': 'dark-green',
+          'code:403': 'dark-red',
+          'code:404': 'dark-orange',
+          'code:500': 'dark-red',
+          'code:502': 'semi-dark-red',
+          'code:503': 'dark-red',
+        },
         datasource: '$datasource',
-        options: {
-          maxValue: '1.5',  // TODO might need to be configurable
-          minValue: 0,
-          thresholds: [
-            {
-              color: 'green',
-              index: 0,
-              value: null,
-            },
-            {
-              color: '#EAB839',
-              index: 1,
-              value: slo.warning,
-            },
-            {
-              color: 'red',
-              index: 2,
-              value: slo.critical,
-            },
-          ],
-          valueOptions: {
-            decimals: null,
-            stat: 'last',
-            unit: 'dtdurations',
-          },
+        legend: {
+          avg: false,
+          current: false,
+          max: false,
+          min: false,
+          show: true,
+          total: false,
+          values: false,
         },
         targets: [
           {
-            expr: '%s{quantile="%.2f"}' % [
-              recordingrule.record,
-              slo.quantile,
-            ],
+            expr: '%s' % recordingrule.record,
             format: 'time_series',
+            intervalFactor: 1,
+            legendFormat: 'code:{{code}}',
+            refId: 'A',
           },
         ],
-        title: 'P99 Latency',
-        type: 'gauge',
+        title: 'HTTP Response Codes',
+        tooltip: {
+          shared: true,
+          sort: 0,
+          value_type: 'individual',
+        },
+        type: 'graph',
       },
     },
   },
