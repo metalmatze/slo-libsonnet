@@ -59,6 +59,8 @@ local prometheus = grafana.prometheus;
     row.new()
     .addPanel(latency.grafana.gauge)
     .addPanel(latency.grafana.graph)
+  ).addRow(
+    row.new()
     .addPanel(errors.grafana.graph)
   ),
 }
