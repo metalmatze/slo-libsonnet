@@ -2,7 +2,7 @@
   errors(slo):: {
     local recordingrule = {
       expr: |||
-        sum(rate(%s{%s}[10m])) BY (code)
+        sum(label_replace(rate(%s{%s}[10m]), "code", "${1}xx", "code", "([0-9])..")) by (code)
       ||| % [
         slo.metric,
         slo.selectors,
@@ -36,12 +36,13 @@
     grafana: {
       graph: {
         aliasColors: {
-          'code:201': 'dark-green',
-          'code:403': 'dark-red',
-          'code:404': 'dark-orange',
-          'code:500': 'dark-red',
-          'code:502': 'semi-dark-red',
-          'code:503': 'dark-red',
+          '1xx': '#EAB839',
+          '2xx': '#7EB26D',
+          '3xx': '#6ED0E0',
+          '4xx': '#EF843C',
+          '5xx': '#E24D42',
+          success: '#7EB26D',
+          'error': '#E24D42',
         },
         datasource: '$datasource',
         legend: {
@@ -57,9 +58,10 @@
           {
             expr: '%s' % recordingrule.record,
             format: 'time_series',
-            intervalFactor: 1,
-            legendFormat: 'code:{{code}}',
+            intervalFactor: 2,
+            legendFormat: '{{code}}',
             refId: 'A',
+            step: 10,
           },
         ],
         title: 'HTTP Response Codes',

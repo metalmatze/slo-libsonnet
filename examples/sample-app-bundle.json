@@ -147,15 +147,29 @@
                      "align": false,
                      "alignLevel": null
                   }
-               },
+               }
+            ],
+            "repeat": null,
+            "repeatIteration": null,
+            "repeatRowId": null,
+            "showTitle": false,
+            "title": "Dashboard Row",
+            "titleSize": "h6",
+            "type": "row"
+         },
+         {
+            "collapse": false,
+            "collapsed": false,
+            "panels": [
                {
                   "aliasColors": {
-                     "code:201": "dark-green",
-                     "code:403": "dark-red",
-                     "code:404": "dark-orange",
-                     "code:500": "dark-red",
-                     "code:502": "semi-dark-red",
-                     "code:503": "dark-red"
+                     "1xx": "#EAB839",
+                     "2xx": "#7EB26D",
+                     "3xx": "#6ED0E0",
+                     "4xx": "#EF843C",
+                     "5xx": "#E24D42",
+                     "error": "#E24D42",
+                     "success": "#7EB26D"
                   },
                   "datasource": "$datasource",
                   "gridPos": { },
@@ -173,9 +187,10 @@
                      {
                         "expr": "code:http_requests_total:rate:sum",
                         "format": "time_series",
-                        "intervalFactor": 1,
-                        "legendFormat": "code:{{code}}",
-                        "refId": "A"
+                        "intervalFactor": 2,
+                        "legendFormat": "{{code}}",
+                        "refId": "A",
+                        "step": 10
                      }
                   ],
                   "title": "HTTP Response Codes",
@@ -251,7 +266,7 @@
       "version": 0
    },
    "recordingrule": {
-      "expr": "sum(rate(http_requests_total{namespace=\"default\",job=\"fooapp\"}[10m])) BY (code)\n",
+      "expr": "sum(label_replace(rate(http_requests_total{namespace=\"default\",job=\"fooapp\"}[10m]), \"code\", \"${1}xx\", \"code\", \"([0-9])..\")) by (code)\n",
       "labels": {
          "quantile": "0.99"
       },
