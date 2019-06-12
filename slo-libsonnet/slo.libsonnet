@@ -35,6 +35,7 @@
 
     grafana: {
       graph: {
+        span: 12,
         aliasColors: {
           '1xx': '#EAB839',
           '2xx': '#7EB26D',
@@ -188,6 +189,7 @@
         },
         lines: true,
         fill: 2,
+        span: 12,
         linewidth: 1,
         dashes: false,
         dashLength: 10,
