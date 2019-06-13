@@ -2,18 +2,18 @@
   errors(slo):: {
     local recordingrule = {
       expr: |||
-        sum(label_replace(rate(%s{%s}[10m]), "code", "${1}xx", "code", "([0-9])..")) by (code)
+        sum(label_replace(rate(%s{%s}[10m]), "status_code", "${1}xx", "code", "([0-9])..")) by (status_code)
       ||| % [
         slo.metric,
         slo.selectors,
       ],
-      record: 'code:%s:rate:sum' % slo.metric,
+      record: 'status_code:%s:rate:sum' % slo.metric,
     },
     recordingrule: recordingrule,
 
     alertWarning: {
       expr: |||
-        %s{code!~"2.."} * 100 / %s > %s
+        %s{status_code!~"2.."} * 100 / %s > %s
       ||| % [
         recordingrule.record,
         recordingrule.record,
@@ -26,7 +26,7 @@
     },
 
     alertCritical: {
-      expr: '%s{code!~"2.."} * 100 / %s > %s' % [recordingrule.record, recordingrule.record, slo.critical],
+      expr: '%s{status_code!~"2.."} * 100 / %s > %s' % [recordingrule.record, recordingrule.record, slo.critical],
       'for': '5m',
       labels: {
         severity: 'critical',
@@ -60,7 +60,7 @@
             expr: '%s' % recordingrule.record,
             format: 'time_series',
             intervalFactor: 2,
-            legendFormat: '{{code}}',
+            legendFormat: '{{status_code}}',
             refId: 'A',
             step: 10,
           },
