@@ -62,6 +62,7 @@
       "paceLength": 10,
       "pointradius": 2,
       "points": false,
+      "span": 12,
       "targets": [
          {
             "expr": "max(prometheus_http_request_duration_seconds:histogram_quantile) by (quantile)",
