@@ -1,0 +1,184 @@
+{
+   "__inputs": [ ],
+   "__requires": [ ],
+   "annotations": {
+      "list": [ ]
+   },
+   "editable": false,
+   "gnetId": null,
+   "graphTooltip": 0,
+   "hideControls": false,
+   "id": null,
+   "links": [ ],
+   "refresh": "",
+   "rows": [
+      {
+         "collapse": false,
+         "collapsed": false,
+         "panels": [
+            {
+               "datasource": "$datasource",
+               "gridPos": { },
+               "id": 2,
+               "options": {
+                  "maxValue": "1.5",
+                  "minValue": 0,
+                  "thresholds": [
+                     {
+                        "color": "green",
+                        "index": 0,
+                        "value": null
+                     },
+                     {
+                        "color": "#EAB839",
+                        "index": 1,
+                        "value": 0.5
+                     },
+                     {
+                        "color": "red",
+                        "index": 2,
+                        "value": 1
+                     }
+                  ],
+                  "valueOptions": {
+                     "decimals": null,
+                     "stat": "last",
+                     "unit": "dtdurations"
+                  }
+               },
+               "targets": [
+                  {
+                     "expr": "grpc_server_handling_seconds:histogram_quantile{quantile=\"0.99\"}",
+                     "format": "time_series"
+                  }
+               ],
+               "title": "P99 Latency",
+               "type": "gauge"
+            },
+            {
+               "dashLength": 10,
+               "dashes": false,
+               "datasource": "$datasource",
+               "fill": 2,
+               "gridPos": { },
+               "id": 3,
+               "lines": true,
+               "linewidth": 1,
+               "paceLength": 10,
+               "pointradius": 2,
+               "points": false,
+               "span": 12,
+               "targets": [
+                  {
+                     "expr": "max(grpc_server_handling_seconds:histogram_quantile) by (quantile)",
+                     "legendFormat": "{{ quantile }}"
+                  }
+               ],
+               "thresholds": [
+                  {
+                     "colorMode": "warning",
+                     "fill": true,
+                     "line": true,
+                     "op": "gt",
+                     "value": 0.5,
+                     "yaxis": "left"
+                  },
+                  {
+                     "colorMode": "critical",
+                     "fill": true,
+                     "line": true,
+                     "op": "gt",
+                     "value": 1,
+                     "yaxis": "left"
+                  }
+               ],
+               "title": "Request Latency",
+               "type": "graph",
+               "xaxis": {
+                  "buckets": null,
+                  "mode": "time",
+                  "name": null,
+                  "show": true,
+                  "values": [ ]
+               },
+               "yaxes": [
+                  {
+                     "decimals": 1,
+                     "format": "s",
+                     "max": null,
+                     "min": "0",
+                     "show": true
+                  },
+                  {
+                     "show": false
+                  }
+               ],
+               "yaxis": {
+                  "align": false,
+                  "alignLevel": null
+               }
+            }
+         ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": false,
+         "title": "Dashboard Row",
+         "titleSize": "h6",
+         "type": "row"
+      }
+   ],
+   "schemaVersion": 14,
+   "style": "dark",
+   "tags": [ ],
+   "templating": {
+      "list": [
+         {
+            "current": {
+               "text": "Prometheus",
+               "value": "Prometheus"
+            },
+            "hide": 0,
+            "label": null,
+            "name": "datasource",
+            "options": [ ],
+            "query": "prometheus",
+            "refresh": 1,
+            "regex": "",
+            "type": "datasource"
+         }
+      ]
+   },
+   "time": {
+      "from": "now-1h",
+      "to": "now"
+   },
+   "timepicker": {
+      "refresh_intervals": [
+         "5s",
+         "10s",
+         "30s",
+         "1m",
+         "5m",
+         "15m",
+         "30m",
+         "1h",
+         "2h",
+         "1d"
+      ],
+      "time_options": [
+         "5m",
+         "15m",
+         "1h",
+         "6h",
+         "12h",
+         "24h",
+         "2d",
+         "7d",
+         "30d"
+      ]
+   },
+   "timezone": "browser",
+   "title": "Request Latency",
+   "version": 0
+}

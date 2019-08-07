@@ -1,0 +1,22 @@
+{
+   "alerts": [
+      {
+         "expr": "grpc_code:grpc_server_handled_total:rate:sum{grpc_code!=\"OK\"} * 100 / grpc_code:grpc_server_handled_total:rate:sum > 5",
+         "for": "5m",
+         "labels": {
+            "severity": "warning"
+         }
+      },
+      {
+         "expr": "grpc_code:grpc_server_handled_total:rate:sum{grpc_code!=\"OK\"} * 100 / grpc_code:grpc_server_handled_total:rate:sum > 10",
+         "for": "5m",
+         "labels": {
+            "severity": "critical"
+         }
+      }
+   ],
+   "recordingrule": {
+      "expr": "sum(rate(grpc_server_handled_total{grpc_type=\"unary\",namespace=\"default\",job=\"fooapp\"}[10m])) by (grpc_code)",
+      "record": "grpc_code:grpc_server_handled_total:rate:sum"
+   }
+}

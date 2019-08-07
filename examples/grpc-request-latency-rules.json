@@ -1,0 +1,123 @@
+{
+   "alerts": [
+      {
+         "expr": "grpc_server_handling_seconds:histogram_quantile > 0.500",
+         "for": "5m",
+         "labels": {
+            "severity": "warning"
+         }
+      },
+      {
+         "expr": "grpc_server_handling_seconds:histogram_quantile > 1.000",
+         "for": "5m",
+         "labels": {
+            "severity": "critical"
+         }
+      }
+   ],
+   "gauge": {
+      "datasource": "$datasource",
+      "options": {
+         "maxValue": "1.5",
+         "minValue": 0,
+         "thresholds": [
+            {
+               "color": "green",
+               "index": 0,
+               "value": null
+            },
+            {
+               "color": "#EAB839",
+               "index": 1,
+               "value": 0.5
+            },
+            {
+               "color": "red",
+               "index": 2,
+               "value": 1
+            }
+         ],
+         "valueOptions": {
+            "decimals": null,
+            "stat": "last",
+            "unit": "dtdurations"
+         }
+      },
+      "targets": [
+         {
+            "expr": "grpc_server_handling_seconds:histogram_quantile{quantile=\"0.99\"}",
+            "format": "time_series"
+         }
+      ],
+      "title": "P99 Latency",
+      "type": "gauge"
+   },
+   "graph": {
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "$datasource",
+      "fill": 2,
+      "lines": true,
+      "linewidth": 1,
+      "paceLength": 10,
+      "pointradius": 2,
+      "points": false,
+      "span": 12,
+      "targets": [
+         {
+            "expr": "max(grpc_server_handling_seconds:histogram_quantile) by (quantile)",
+            "legendFormat": "{{ quantile }}"
+         }
+      ],
+      "thresholds": [
+         {
+            "colorMode": "warning",
+            "fill": true,
+            "line": true,
+            "op": "gt",
+            "value": 0.5,
+            "yaxis": "left"
+         },
+         {
+            "colorMode": "critical",
+            "fill": true,
+            "line": true,
+            "op": "gt",
+            "value": 1,
+            "yaxis": "left"
+         }
+      ],
+      "title": "Request Latency",
+      "type": "graph",
+      "xaxis": {
+         "buckets": null,
+         "mode": "time",
+         "name": null,
+         "show": true,
+         "values": [ ]
+      },
+      "yaxes": [
+         {
+            "decimals": 1,
+            "format": "s",
+            "max": null,
+            "min": "0",
+            "show": true
+         },
+         {
+            "show": false
+         }
+      ],
+      "yaxis": {
+         "align": false,
+         "alignLevel": null
+      }
+   },
+   "recordingrule": {
+      "expr": "histogram_quantile(0.99, sum(rate(grpc_server_handling_seconds_bucket{grpc_type=\"unary\",namespace=\"default\",job=\"fooapp\"}[5m])) by (le))\n",
+      "labels": {
+         "quantile": "0.99"
+      },
+      "record": "grpc_server_handling_seconds:histogram_quantile"
+   }
+}
