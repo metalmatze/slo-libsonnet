@@ -24,6 +24,13 @@
         slo.metric,
         slo.rate,
       ],
+      labels: {
+        [s[0]]: std.strReplace(s[1], '"', '')
+        for s in [
+          std.split(s, '=')
+          for s in slo.selectors
+        ]
+      },
     },
     recordingrule: recordingrule,
 
