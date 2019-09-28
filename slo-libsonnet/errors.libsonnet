@@ -7,12 +7,20 @@
 
     local recordingrule = {
       expr: |||
-        sum(label_replace(rate(%s{%s}[10m]), "status_code", "${1}xx", "code", "([0-9])..")) by (status_code)
+        sum(label_replace(rate(%s{%s}[%s]), "status_code", "${1}xx", "code", "([0-9])..")) by (status_code)
       ||| % [
         slo.metric,
-        slo.selectors,
+        std.join(',', slo.selectors),
+        slo.rate,
       ],
-      record: 'status_code:%s:rate:sum' % slo.metric,
+      record: 'status_code:%s:rate%s:sum' % [slo.metric, slo.rate],
+      labels: {
+        [s[0]]: std.strReplace(s[1], '"', '')
+        for s in [
+          std.split(s, '=')
+          for s in slo.selectors
+        ]
+      },
     },
     recordingrule: recordingrule,
 
