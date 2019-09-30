@@ -41,6 +41,7 @@ local errors = import 'errors.libsonnet';
 
     local multiBurnRate30d = [
       {
+        alert: 'ErrorBudgetBurn',
         expr: |||
           (
             %s{%s} > (14.4*%f)
@@ -67,8 +68,8 @@ local errors = import 'errors.libsonnet';
           std.join(',', slo.selectors),
           slo.errorBudget,
         ],
-        severity: 'page',
         labels: labels {
+          severity: 'critical',
           window: '30d',
         },
       },
