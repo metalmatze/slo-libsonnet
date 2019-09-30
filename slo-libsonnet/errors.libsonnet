@@ -3,15 +3,18 @@
     local slo = {
       metric: error 'must set metric for errors',
       selectors: error 'must set selectors for errors',
+      rate: '5m',
+      statusCode: 'code',
     } + param,
 
     local recordingrule = {
       expr: |||
-        sum(label_replace(rate(%s{%s}[%s]), "status_code", "${1}xx", "code", "([0-9])..")) by (status_code)
+        sum(label_replace(rate(%s{%s}[%s]), "status_code", "${1}xx", "%s", "([0-9])..")) by (status_code)
       ||| % [
         slo.metric,
         std.join(',', slo.selectors),
         slo.rate,
+        slo.statusCode,
       ],
       record: 'status_code:%s:rate%s:sum' % [slo.metric, slo.rate],
       labels: {
