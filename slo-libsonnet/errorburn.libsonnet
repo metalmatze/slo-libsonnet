@@ -1,7 +1,14 @@
 local errors = import 'errors.libsonnet';
 
 {
-  errorburn(slo):: {
+  errorburn(param):: {
+    local slo = {
+      metric: 'http_requests_total',
+      selectors: ['namespace="default"'],
+      statusCode: 'code',
+      errorBudget: 1 - 0.999,
+    } + param,
+
     local rates = ['5m', '30m', '1h', '2h', '6h', '1d', '3d'],
     local labels = {
       [s[0]]: std.strReplace(s[1], '"', '')
@@ -16,6 +23,7 @@ local errors = import 'errors.libsonnet';
         metric: slo.metric,
         selectors: slo.selectors,
         rate: rate,
+        statusCode: slo.statusCode,
       }).recordingrule
       for rate in rates
     ],
