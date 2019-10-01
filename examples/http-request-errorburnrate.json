@@ -1,0 +1,130 @@
+{
+   "alerts": [
+      [
+         {
+            "alert": "ErrorBudgetBurn",
+            "expr": "(\n  errors:status_code:promhttp_metric_handler_requests_total:rate1h:sum{namespace=\"default\",job=\"fooapp\"} > (14.4*0.001000)\n  and\n  errors:status_code:promhttp_metric_handler_requests_total:rate5m:sum{namespace=\"default\",job=\"fooapp\"} > (14.4*0.001000)\n)\nor\n(\n  errors:status_code:promhttp_metric_handler_requests_total:rate6h:sum{namespace=\"default\",job=\"fooapp\"} > (6*0.001000)\n  and\n  errors:status_code:promhttp_metric_handler_requests_total:rate30m:sum{namespace=\"default\",job=\"fooapp\"} > (6*0.001000)\n)\n",
+            "labels": {
+               "job": "fooapp",
+               "namespace": "default",
+               "severity": "critical",
+               "window": "30d"
+            }
+         }
+      ]
+   ],
+   "recordingrule": [
+      {
+         "expr": "sum(label_replace(rate(promhttp_metric_handler_requests_total{namespace=\"default\",job=\"fooapp\"}[5m]), \"status_code\", \"${1}xx\", \"code\", \"([0-9])..\")) by (status_code)\n",
+         "labels": {
+            "job": "fooapp",
+            "namespace": "default"
+         },
+         "record": "status_code:promhttp_metric_handler_requests_total:rate5m:sum"
+      },
+      {
+         "expr": "sum(label_replace(rate(promhttp_metric_handler_requests_total{namespace=\"default\",job=\"fooapp\"}[30m]), \"status_code\", \"${1}xx\", \"code\", \"([0-9])..\")) by (status_code)\n",
+         "labels": {
+            "job": "fooapp",
+            "namespace": "default"
+         },
+         "record": "status_code:promhttp_metric_handler_requests_total:rate30m:sum"
+      },
+      {
+         "expr": "sum(label_replace(rate(promhttp_metric_handler_requests_total{namespace=\"default\",job=\"fooapp\"}[1h]), \"status_code\", \"${1}xx\", \"code\", \"([0-9])..\")) by (status_code)\n",
+         "labels": {
+            "job": "fooapp",
+            "namespace": "default"
+         },
+         "record": "status_code:promhttp_metric_handler_requests_total:rate1h:sum"
+      },
+      {
+         "expr": "sum(label_replace(rate(promhttp_metric_handler_requests_total{namespace=\"default\",job=\"fooapp\"}[2h]), \"status_code\", \"${1}xx\", \"code\", \"([0-9])..\")) by (status_code)\n",
+         "labels": {
+            "job": "fooapp",
+            "namespace": "default"
+         },
+         "record": "status_code:promhttp_metric_handler_requests_total:rate2h:sum"
+      },
+      {
+         "expr": "sum(label_replace(rate(promhttp_metric_handler_requests_total{namespace=\"default\",job=\"fooapp\"}[6h]), \"status_code\", \"${1}xx\", \"code\", \"([0-9])..\")) by (status_code)\n",
+         "labels": {
+            "job": "fooapp",
+            "namespace": "default"
+         },
+         "record": "status_code:promhttp_metric_handler_requests_total:rate6h:sum"
+      },
+      {
+         "expr": "sum(label_replace(rate(promhttp_metric_handler_requests_total{namespace=\"default\",job=\"fooapp\"}[1d]), \"status_code\", \"${1}xx\", \"code\", \"([0-9])..\")) by (status_code)\n",
+         "labels": {
+            "job": "fooapp",
+            "namespace": "default"
+         },
+         "record": "status_code:promhttp_metric_handler_requests_total:rate1d:sum"
+      },
+      {
+         "expr": "sum(label_replace(rate(promhttp_metric_handler_requests_total{namespace=\"default\",job=\"fooapp\"}[3d]), \"status_code\", \"${1}xx\", \"code\", \"([0-9])..\")) by (status_code)\n",
+         "labels": {
+            "job": "fooapp",
+            "namespace": "default"
+         },
+         "record": "status_code:promhttp_metric_handler_requests_total:rate3d:sum"
+      },
+      {
+         "expr": "sum(status_code:promhttp_metric_handler_requests_total:rate5m:sum{namespace=\"default\",job=\"fooapp\",status_code=\"5xx\"})\n/\nsum(status_code:promhttp_metric_handler_requests_total:rate5m:sum{namespace=\"default\",job=\"fooapp\"})\n",
+         "labels": {
+            "job": "fooapp",
+            "namespace": "default"
+         },
+         "record": "errors:status_code:promhttp_metric_handler_requests_total:rate5m:sum"
+      },
+      {
+         "expr": "sum(status_code:promhttp_metric_handler_requests_total:rate30m:sum{namespace=\"default\",job=\"fooapp\",status_code=\"5xx\"})\n/\nsum(status_code:promhttp_metric_handler_requests_total:rate30m:sum{namespace=\"default\",job=\"fooapp\"})\n",
+         "labels": {
+            "job": "fooapp",
+            "namespace": "default"
+         },
+         "record": "errors:status_code:promhttp_metric_handler_requests_total:rate30m:sum"
+      },
+      {
+         "expr": "sum(status_code:promhttp_metric_handler_requests_total:rate1h:sum{namespace=\"default\",job=\"fooapp\",status_code=\"5xx\"})\n/\nsum(status_code:promhttp_metric_handler_requests_total:rate1h:sum{namespace=\"default\",job=\"fooapp\"})\n",
+         "labels": {
+            "job": "fooapp",
+            "namespace": "default"
+         },
+         "record": "errors:status_code:promhttp_metric_handler_requests_total:rate1h:sum"
+      },
+      {
+         "expr": "sum(status_code:promhttp_metric_handler_requests_total:rate2h:sum{namespace=\"default\",job=\"fooapp\",status_code=\"5xx\"})\n/\nsum(status_code:promhttp_metric_handler_requests_total:rate2h:sum{namespace=\"default\",job=\"fooapp\"})\n",
+         "labels": {
+            "job": "fooapp",
+            "namespace": "default"
+         },
+         "record": "errors:status_code:promhttp_metric_handler_requests_total:rate2h:sum"
+      },
+      {
+         "expr": "sum(status_code:promhttp_metric_handler_requests_total:rate6h:sum{namespace=\"default\",job=\"fooapp\",status_code=\"5xx\"})\n/\nsum(status_code:promhttp_metric_handler_requests_total:rate6h:sum{namespace=\"default\",job=\"fooapp\"})\n",
+         "labels": {
+            "job": "fooapp",
+            "namespace": "default"
+         },
+         "record": "errors:status_code:promhttp_metric_handler_requests_total:rate6h:sum"
+      },
+      {
+         "expr": "sum(status_code:promhttp_metric_handler_requests_total:rate1d:sum{namespace=\"default\",job=\"fooapp\",status_code=\"5xx\"})\n/\nsum(status_code:promhttp_metric_handler_requests_total:rate1d:sum{namespace=\"default\",job=\"fooapp\"})\n",
+         "labels": {
+            "job": "fooapp",
+            "namespace": "default"
+         },
+         "record": "errors:status_code:promhttp_metric_handler_requests_total:rate1d:sum"
+      },
+      {
+         "expr": "sum(status_code:promhttp_metric_handler_requests_total:rate3d:sum{namespace=\"default\",job=\"fooapp\",status_code=\"5xx\"})\n/\nsum(status_code:promhttp_metric_handler_requests_total:rate3d:sum{namespace=\"default\",job=\"fooapp\"})\n",
+         "labels": {
+            "job": "fooapp",
+            "namespace": "default"
+         },
+         "record": "errors:status_code:promhttp_metric_handler_requests_total:rate3d:sum"
+      }
+   ]
+}
