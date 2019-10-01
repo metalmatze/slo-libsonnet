@@ -18,12 +18,13 @@
          "panels": [
             {
                "aliasColors": {
-                  "code:201": "dark-green",
-                  "code:403": "dark-red",
-                  "code:404": "dark-orange",
-                  "code:500": "dark-red",
-                  "code:502": "semi-dark-red",
-                  "code:503": "dark-red"
+                  "1xx": "#EAB839",
+                  "2xx": "#7EB26D",
+                  "3xx": "#6ED0E0",
+                  "4xx": "#EF843C",
+                  "5xx": "#E24D42",
+                  "error": "#E24D42",
+                  "success": "#7EB26D"
                },
                "datasource": "$datasource",
                "gridPos": { },
@@ -37,13 +38,15 @@
                   "total": false,
                   "values": false
                },
+               "span": 12,
                "targets": [
                   {
-                     "expr": "code:promhttp_metric_handler_requests_total:rate:sum",
+                     "expr": "status_code:promhttp_metric_handler_requests_total:rate:sum",
                      "format": "time_series",
-                     "intervalFactor": 1,
-                     "legendFormat": "code:{{code}}",
-                     "refId": "A"
+                     "intervalFactor": 2,
+                     "legendFormat": "{{status_code}}",
+                     "refId": "A",
+                     "step": 10
                   }
                ],
                "title": "HTTP Response Codes",
