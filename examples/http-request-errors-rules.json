@@ -1,0 +1,26 @@
+{
+   "alerts": [
+      {
+         "expr": "status_code:promhttp_metric_handler_requests_total:rate5m:sum{status_code!~\"2..\"} * 100 / status_code:promhttp_metric_handler_requests_total:rate5m:sum > 5\n",
+         "for": "5m",
+         "labels": {
+            "severity": "warning"
+         }
+      },
+      {
+         "expr": "status_code:promhttp_metric_handler_requests_total:rate5m:sum{status_code!~\"2..\"} * 100 / status_code:promhttp_metric_handler_requests_total:rate5m:sum > 10",
+         "for": "5m",
+         "labels": {
+            "severity": "critical"
+         }
+      }
+   ],
+   "recordingrule": {
+      "expr": "sum(label_replace(rate(promhttp_metric_handler_requests_total{namespace=\"default\",job=\"fooapp\"}[5m]), \"status_code\", \"${1}xx\", \"code\", \"([0-9])..\")) by (status_code)\n",
+      "labels": {
+         "job": "fooapp",
+         "namespace": "default"
+      },
+      "record": "status_code:promhttp_metric_handler_requests_total:rate5m:sum"
+   }
+}
