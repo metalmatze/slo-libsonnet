@@ -28,7 +28,7 @@ grafana:
     {"align": false, "alignLevel": null}}'
 recordingrule:
   expr: |
-    histogram_quantile(0.99, sum(prometheus_http_request_duration_seconds_bucket{namespace="default",job="fooapp"}) by (le))
+    histogram_quantile(0.99, sum(prometheus_http_request_duration_seconds_bucket{["namespace=\"default\"", "job=\"fooapp\""]}) by (le))
   labels:
     quantile: "0.99"
   record: prometheus_http_request_duration_seconds:histogram_quantile
