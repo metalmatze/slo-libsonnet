@@ -1,3 +1,4 @@
 (import 'latency.libsonnet') +
 (import 'errors.libsonnet') +
-(import 'errorburn.libsonnet')
+(import 'errorburn.libsonnet') +
+(import 'errorbudget.libsonnet')
