@@ -17,6 +17,8 @@ local slo = import '../slo-libsonnet/slo.libsonnet';
     latency.alertCritical,
   ],
 
-  gauge: latency.grafana.gauge,
-  graph: latency.grafana.graph,
+  grafana: {
+    gauge: std.toString(latency.grafana.gauge),
+    graph: std.toString(latency.grafana.graph),
+  },
 }
