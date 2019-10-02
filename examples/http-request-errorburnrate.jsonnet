@@ -10,7 +10,5 @@ local slo = import '../slo-libsonnet/slo.libsonnet';
 
   // Output these as example
   recordingrule: errorburnrate.recordingrules,
-  alerts: [
-    errorburnrate.alerts,
-  ],
+  alerts: errorburnrate.alerts,
 }
