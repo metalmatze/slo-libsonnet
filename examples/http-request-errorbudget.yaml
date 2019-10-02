@@ -1,0 +1,31 @@
+recordingrule:
+- expr: |
+    sum(label_replace(increase(promhttp_metric_handler_requests_total{namespace="default",job="fooapp"}[30d]), "status_code", "${1}xx", "code", "([0-9])..")) by (status_code)
+  labels:
+    job: fooapp
+    namespace: default
+  record: status_code:promhttp_metric_handler_requests_total:increase30d:sum
+- expr: |
+    status_code:promhttp_metric_handler_requests_total:increase30d:sum{namespace="default",job="fooapp",status_code="5xx"}
+  labels:
+    job: fooapp
+    namespace: default
+  record: errors:status_code:promhttp_metric_handler_requests_total:increase30d:sum
+- expr: |
+    (0.001000) * sum(status_code:promhttp_metric_handler_requests_total:increase30d:sum)
+  labels:
+    job: fooapp
+    namespace: default
+  record: errorbudget_requests:status_code:promhttp_metric_handler_requests_total:increase30d:sum
+- expr: |
+    sum(errorbudget_requests:status_code:promhttp_metric_handler_requests_total:increase30d:sum{namespace="default",job="fooapp"}) - sum(errors:status_code:promhttp_metric_handler_requests_total:increase30d:sum{namespace="default",job="fooapp"})
+  labels:
+    job: fooapp
+    namespace: default
+  record: errorbudget_remaining:status_code:promhttp_metric_handler_requests_total:increase30d:sum
+- expr: |
+    errorbudget_remaining:status_code:promhttp_metric_handler_requests_total:increase30d:sum / errorbudget_requests:status_code:promhttp_metric_handler_requests_total:increase30d:sum
+  labels:
+    job: fooapp
+    namespace: default
+  record: errorbudget:status_code:promhttp_metric_handler_requests_total:increase30d:sum
