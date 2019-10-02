@@ -33,4 +33,7 @@ recordingrule:
         rate(promhttp_metric_handler_requests_total{namespace="default",job="fooapp"}[5m]
       ), "status_class", "${1}xx", "code", "([0-9])..")
     )
+  labels:
+    job: fooapp
+    namespace: default
   record: status_class:promhttp_metric_handler_requests_total:rate5m
