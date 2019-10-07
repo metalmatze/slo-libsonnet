@@ -3,10 +3,10 @@ local errors = import 'errors.libsonnet';
 {
   errorburn(param):: {
     local slo = {
-      metric: 'http_requests_total',
-      selectors: ['namespace="default"'],
+      metric: error 'must set metric for errorburn',
+      selectors: error 'must set selectors for errorburn',
+      errorBudget: error 'must set errorBudget for errorburn',
       statusCode: 'code',
-      errorBudget: 1 - 0.999,
     } + param,
 
     local rates = ['5m', '30m', '1h', '2h', '6h', '1d', '3d'],
