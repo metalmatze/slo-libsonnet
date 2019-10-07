@@ -1,6 +1,9 @@
 all: examples
 
-examples: examples/http-request-errorburnrate.yaml examples/http-request-errors.yaml examples/http-request-latency.yaml
+examples: examples/http-request-errorbudget.yaml examples/http-request-errorburnrate.yaml examples/http-request-errors.yaml examples/http-request-latency.yaml
+
+examples/http-request-errorbudget.yaml: examples/http-request-errorbudget.jsonnet
+	jsonnet -J examples/vendor examples/http-request-errorbudget.jsonnet | gojsontoyaml > examples/http-request-errorbudget.yaml
 
 examples/http-request-errorburnrate.yaml: examples/http-request-errorburnrate.jsonnet
 	jsonnet -J examples/vendor examples/http-request-errorburnrate.jsonnet | gojsontoyaml > examples/http-request-errorburnrate.yaml
