@@ -1,0 +1,13 @@
+recordingrules:
+- expr: |
+    sum(increase(prometheus_http_request_duration_seconds_count{namespace="default",job="fooapp"}[30d]))
+  labels:
+    job: fooapp
+    namespace: default
+  record: prometheus_http_request_duration_seconds:increase30d:sum
+- expr: |
+    sum(prometheus_http_request_duration_seconds:increase30d:sum{namespace="default",job="fooapp"}) - sum(increase(prometheus_http_request_duration_seconds_bucket{namespace="default",job="fooapp",le="0.5"}[30d]))
+  labels:
+    job: fooapp
+    namespace: default
+  record: slow:prometheus_http_request_duration_seconds:increase30d:sum
