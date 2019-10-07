@@ -1,5 +1,11 @@
 {
-  latency(slo):: {
+  latency(param):: {
+    local slo = {
+      metric: error 'must set metric for latency',
+      selectors: error 'must set selectors for latency',
+      quantile: error 'must set quantile for latency',
+    } + param,
+
     recordingrule(quantile=slo.quantile):: {
       expr: |||
         histogram_quantile(%.2f, sum(%s_bucket{%s}) by (le))

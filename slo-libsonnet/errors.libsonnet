@@ -1,5 +1,10 @@
 {
-  errors(slo):: {
+  errors(param):: {
+    local slo = {
+      metric: error 'must set metric for errors',
+      selectors: error 'must set selectors for errors',
+    } + param,
+
     local recordingrule = {
       expr: |||
         sum(label_replace(rate(%s{%s}[10m]), "status_code", "${1}xx", "code", "([0-9])..")) by (status_code)
