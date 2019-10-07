@@ -1,10 +1,10 @@
 {
   errorbudget(param):: {
     local slo = {
-      metric: 'http_requests_total',
-      selectors: ['namespace="default"'],
+      metric: error 'must set metric for errorburn',
+      selectors: error 'must set selectors for errorburn',
+      errorBudget: error 'must set errorBudget for errorburn',
       statusCode: 'code',
-      errorBudget: 1 - 0.999,  // 99.9
     } + param,
 
     local labels = {
