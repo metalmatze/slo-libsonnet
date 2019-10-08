@@ -16,7 +16,6 @@ alerts:
     job: fooapp
     namespace: default
     severity: critical
-    window: 30d
 - alert: ErrorBudgetBurn
   expr: |
     (
@@ -34,7 +33,6 @@ alerts:
     job: fooapp
     namespace: default
     severity: warning
-    window: 30d
 recordingrule:
 - expr: |
     sum by (status_class) (

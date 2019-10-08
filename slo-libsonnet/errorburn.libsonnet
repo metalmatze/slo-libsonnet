@@ -78,7 +78,6 @@ local errors = import 'errors.libsonnet';
         ],
         labels: labels {
           severity: 'critical',
-          window: '30d',
         },
       },
       {
@@ -111,7 +110,6 @@ local errors = import 'errors.libsonnet';
         ],
         labels: labels {
           severity: 'warning',
-          window: '30d',
         },
       },
     ],
