@@ -36,7 +36,7 @@ local errors = import 'errors.libsonnet';
           sum(%s{%s})
         ||| % [
           err.record,
-          std.join(',', slo.selectors + ['status_code="5xx"']),
+          std.join(',', slo.selectors + ['status_class="5xx"']),
           err.record,
           std.join(',', slo.selectors),
         ],
