@@ -17,6 +17,24 @@ alerts:
     namespace: default
     severity: critical
     window: 30d
+- alert: ErrorBudgetBurn
+  expr: |
+    (
+      errors:status_code:promhttp_metric_handler_requests_total:rate1d:sum{namespace="default",job="fooapp"} > (3*0.001000)
+      and
+      errors:status_code:promhttp_metric_handler_requests_total:rate2h:sum{namespace="default",job="fooapp"} > (3*0.001000)
+    )
+    or
+    (
+      errors:status_code:promhttp_metric_handler_requests_total:rate3d:sum{namespace="default",job="fooapp"} > (0.001000)
+      and
+      errors:status_code:promhttp_metric_handler_requests_total:rate6h:sum{namespace="default",job="fooapp"} > (0.001000)
+    )
+  labels:
+    job: fooapp
+    namespace: default
+    severity: warning
+    window: 30d
 recordingrule:
 - expr: |
     sum(label_replace(rate(promhttp_metric_handler_requests_total{namespace="default",job="fooapp"}[5m]), "status_code", "${1}xx", "code", "([0-9])..")) by (status_code)
