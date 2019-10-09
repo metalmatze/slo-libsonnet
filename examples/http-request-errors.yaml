@@ -1,11 +1,19 @@
 alerts:
 - expr: |
-    status_code:promhttp_metric_handler_requests_total:rate5m:sum{status_code!~"2.."} * 100 / status_code:promhttp_metric_handler_requests_total:rate5m:sum > 5
+    (
+      sum(status_class:promhttp_metric_handler_requests_total:rate5m{status_class="5xx"})
+    /
+      sum(status_class:promhttp_metric_handler_requests_total:rate5m)
+    ) > 0.050000000000000003
   for: 5m
   labels:
     severity: warning
-- expr: status_code:promhttp_metric_handler_requests_total:rate5m:sum{status_code!~"2.."}
-    * 100 / status_code:promhttp_metric_handler_requests_total:rate5m:sum > 10
+- expr: |
+    (
+      sum(status_class:promhttp_metric_handler_requests_total:rate5m{status_class="5xx"})
+    /
+      sum(status_class:promhttp_metric_handler_requests_total:rate5m)
+    ) > 0.10000000000000001
   for: 5m
   labels:
     severity: critical
@@ -14,14 +22,18 @@ grafana:
     "#EF843C", "5xx": "#E24D42", "error": "#E24D42", "success": "#7EB26D"}, "datasource":
     "$datasource", "legend": {"avg": false, "current": false, "max": false, "min":
     false, "show": true, "total": false, "values": false}, "span": 12, "targets":
-    [{"expr": "status_code:promhttp_metric_handler_requests_total:rate5m:sum", "format":
-    "time_series", "intervalFactor": 2, "legendFormat": "{{status_code}}", "refId":
+    [{"expr": "status_class:promhttp_metric_handler_requests_total:rate5m", "format":
+    "time_series", "intervalFactor": 2, "legendFormat": "{{status_class}}", "refId":
     "A", "step": 10}], "title": "HTTP Response Codes", "tooltip": {"shared": true,
     "sort": 0, "value_type": "individual"}, "type": "graph"}'
 recordingrule:
   expr: |
-    sum(label_replace(rate(promhttp_metric_handler_requests_total{namespace="default",job="fooapp"}[5m]), "status_code", "${1}xx", "code", "([0-9])..")) by (status_code)
+    sum by (status_class) (
+      label_replace(
+        rate(promhttp_metric_handler_requests_total{namespace="default",job="fooapp"}[5m]
+      ), "status_class", "${1}xx", "code", "([0-9])..")
+    )
   labels:
     job: fooapp
     namespace: default
-  record: status_code:promhttp_metric_handler_requests_total:rate5m:sum
+  record: status_class:promhttp_metric_handler_requests_total:rate5m

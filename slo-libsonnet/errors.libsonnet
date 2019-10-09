@@ -4,19 +4,26 @@
       metric: error 'must set metric for errors',
       selectors: error 'must set selectors for errors',
       rate: '5m',
-      statusCode: 'code',
+      codeSelector: 'code',
     } + param,
 
     local recordingrule = {
       expr: |||
-        sum(label_replace(rate(%s{%s}[%s]), "status_code", "${1}xx", "%s", "([0-9])..")) by (status_code)
+        sum by (status_class) (
+          label_replace(
+            rate(%s{%s}[%s]
+          ), "status_class", "${1}xx", "%s", "([0-9])..")
+        )
       ||| % [
         slo.metric,
         std.join(',', slo.selectors),
         slo.rate,
-        slo.statusCode,
+        slo.codeSelector,
       ],
-      record: 'status_code:%s:rate%s:sum' % [slo.metric, slo.rate],
+      record: 'status_class:%s:rate%s' % [
+        slo.metric,
+        slo.rate,
+      ],
       labels: {
         [s[0]]: std.strReplace(s[1], '"', '')
         for s in [
@@ -29,7 +36,11 @@
 
     alertWarning: {
       expr: |||
-        %s{status_code!~"2.."} * 100 / %s > %s
+        (
+          sum(%s{status_class="5xx"})
+        /
+          sum(%s)
+        ) > %s
       ||| % [
         recordingrule.record,
         recordingrule.record,
@@ -42,7 +53,17 @@
     },
 
     alertCritical: {
-      expr: '%s{status_code!~"2.."} * 100 / %s > %s' % [recordingrule.record, recordingrule.record, slo.critical],
+      expr: |||
+        (
+          sum(%s{status_class="5xx"})
+        /
+          sum(%s)
+        ) > %s
+      ||| % [
+        recordingrule.record,
+        recordingrule.record,
+        slo.critical,
+      ],
       'for': '5m',
       labels: {
         severity: 'critical',
@@ -76,7 +97,7 @@
             expr: '%s' % recordingrule.record,
             format: 'time_series',
             intervalFactor: 2,
-            legendFormat: '{{status_code}}',
+            legendFormat: '{{status_class}}',
             refId: 'A',
             step: 10,
           },
