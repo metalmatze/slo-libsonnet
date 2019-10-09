@@ -2,15 +2,15 @@ alerts:
 - alert: ErrorBudgetBurn
   expr: |
     (
-      errors:status_class:promhttp_metric_handler_requests_total:rate1h{namespace="default",job="fooapp"} > (14.4*0.001000)
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate1h{namespace="default",job="fooapp"} > (14.4*0.001000)
       and
-      errors:status_class:promhttp_metric_handler_requests_total:rate5m{namespace="default",job="fooapp"} > (14.4*0.001000)
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate5m{namespace="default",job="fooapp"} > (14.4*0.001000)
     )
     or
     (
-      errors:status_class:promhttp_metric_handler_requests_total:rate6h{namespace="default",job="fooapp"} > (6*0.001000)
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate6h{namespace="default",job="fooapp"} > (6*0.001000)
       and
-      errors:status_class:promhttp_metric_handler_requests_total:rate30m{namespace="default",job="fooapp"} > (6*0.001000)
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate30m{namespace="default",job="fooapp"} > (6*0.001000)
     )
   labels:
     job: fooapp
@@ -19,15 +19,15 @@ alerts:
 - alert: ErrorBudgetBurn
   expr: |
     (
-      errors:status_class:promhttp_metric_handler_requests_total:rate1d{namespace="default",job="fooapp"} > (3*0.001000)
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate1d{namespace="default",job="fooapp"} > (3*0.001000)
       and
-      errors:status_class:promhttp_metric_handler_requests_total:rate2h{namespace="default",job="fooapp"} > (3*0.001000)
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate2h{namespace="default",job="fooapp"} > (3*0.001000)
     )
     or
     (
-      errors:status_class:promhttp_metric_handler_requests_total:rate3d{namespace="default",job="fooapp"} > (0.001000)
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate3d{namespace="default",job="fooapp"} > (0.001000)
       and
-      errors:status_class:promhttp_metric_handler_requests_total:rate6h{namespace="default",job="fooapp"} > (0.001000)
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate6h{namespace="default",job="fooapp"} > (0.001000)
     )
   labels:
     job: fooapp
@@ -111,7 +111,7 @@ recordingrule:
   labels:
     job: fooapp
     namespace: default
-  record: errors:status_class:promhttp_metric_handler_requests_total:rate5m
+  record: status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate5m
 - expr: |
     sum(status_class:promhttp_metric_handler_requests_total:rate30m{namespace="default",job="fooapp",status_class="5xx"})
     /
@@ -119,7 +119,7 @@ recordingrule:
   labels:
     job: fooapp
     namespace: default
-  record: errors:status_class:promhttp_metric_handler_requests_total:rate30m
+  record: status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate30m
 - expr: |
     sum(status_class:promhttp_metric_handler_requests_total:rate1h{namespace="default",job="fooapp",status_class="5xx"})
     /
@@ -127,7 +127,7 @@ recordingrule:
   labels:
     job: fooapp
     namespace: default
-  record: errors:status_class:promhttp_metric_handler_requests_total:rate1h
+  record: status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate1h
 - expr: |
     sum(status_class:promhttp_metric_handler_requests_total:rate2h{namespace="default",job="fooapp",status_class="5xx"})
     /
@@ -135,7 +135,7 @@ recordingrule:
   labels:
     job: fooapp
     namespace: default
-  record: errors:status_class:promhttp_metric_handler_requests_total:rate2h
+  record: status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate2h
 - expr: |
     sum(status_class:promhttp_metric_handler_requests_total:rate6h{namespace="default",job="fooapp",status_class="5xx"})
     /
@@ -143,7 +143,7 @@ recordingrule:
   labels:
     job: fooapp
     namespace: default
-  record: errors:status_class:promhttp_metric_handler_requests_total:rate6h
+  record: status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate6h
 - expr: |
     sum(status_class:promhttp_metric_handler_requests_total:rate1d{namespace="default",job="fooapp",status_class="5xx"})
     /
@@ -151,7 +151,7 @@ recordingrule:
   labels:
     job: fooapp
     namespace: default
-  record: errors:status_class:promhttp_metric_handler_requests_total:rate1d
+  record: status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate1d
 - expr: |
     sum(status_class:promhttp_metric_handler_requests_total:rate3d{namespace="default",job="fooapp",status_class="5xx"})
     /
@@ -159,4 +159,4 @@ recordingrule:
   labels:
     job: fooapp
     namespace: default
-  record: errors:status_class:promhttp_metric_handler_requests_total:rate3d
+  record: status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate3d
