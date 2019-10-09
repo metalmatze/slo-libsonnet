@@ -1,22 +1,20 @@
 local errors = import 'errors.libsonnet';
-
+local util = import '_util.libsonnet';
 {
   errorburn(param):: {
     local slo = {
       metric: error 'must set metric for errorburn',
       selectors: error 'must set selectors for errorburn',
       errorBudget: error 'must set errorBudget for errorburn',
+      labels: [],
       statusCode: 'code',
     } + param,
 
     local rates = ['5m', '30m', '1h', '2h', '6h', '1d', '3d'],
-    local labels = {
-      [s[0]]: std.strReplace(s[1], '"', '')
-      for s in [
-        std.split(s, '=')
-        for s in slo.selectors
-      ]
-    },
+
+    local labels =
+      util.selectorsToLabels(slo.selectors) +
+      util.selectorsToLabels(slo.labels),
 
     local errorRatesWithRate = [
       errors.errors({
