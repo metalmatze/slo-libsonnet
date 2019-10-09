@@ -3,11 +3,15 @@ alerts:
     prometheus_http_request_duration_seconds:histogram_quantile > 0.500
   for: 5m
   labels:
+    job: fooapp
+    namespace: default
     severity: warning
 - expr: |
     prometheus_http_request_duration_seconds:histogram_quantile > 1.000
   for: 5m
   labels:
+    job: fooapp
+    namespace: default
     severity: critical
 grafana:
   gauge: '{"datasource": "$datasource", "options": {"maxValue": "1.5", "minValue":
@@ -30,5 +34,7 @@ recordingrule:
   expr: |
     histogram_quantile(0.99, sum(prometheus_http_request_duration_seconds_bucket{["namespace=\"default\"", "job=\"fooapp\""]}) by (le))
   labels:
+    job: fooapp
+    namespace: default
     quantile: "0.99"
   record: prometheus_http_request_duration_seconds:histogram_quantile

@@ -7,6 +7,8 @@ alerts:
     ) > 0.050000000000000003
   for: 5m
   labels:
+    job: fooapp
+    namespace: default
     severity: warning
 - expr: |
     (
@@ -16,6 +18,8 @@ alerts:
     ) > 0.10000000000000001
   for: 5m
   labels:
+    job: fooapp
+    namespace: default
     severity: critical
 grafana:
   graph: '{"aliasColors": {"1xx": "#EAB839", "2xx": "#7EB26D", "3xx": "#6ED0E0", "4xx":

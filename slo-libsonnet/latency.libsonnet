@@ -1,10 +1,17 @@
+local util = import '_util.libsonnet';
+
 {
   latency(param):: {
     local slo = {
       metric: error 'must set metric for latency',
       selectors: error 'must set selectors for latency',
       quantile: error 'must set quantile for latency',
+      labels: [],
     } + param,
+
+    local labels =
+      util.selectorsToLabels(slo.selectors) +
+      util.selectorsToLabels(slo.labels),
 
     recordingrule(quantile=slo.quantile):: {
       expr: |||
@@ -15,7 +22,8 @@
         slo.selectors,
       ],
       record: '%s:histogram_quantile' % slo.metric,
-      labels: {
+
+      labels: labels {
         quantile: '%.2f' % quantile,
       },
     },
@@ -27,7 +35,7 @@
         %s > %.3f
       ||| % [_recordingrule.record, slo.warning],
       'for': '5m',
-      labels: {
+      labels: labels {
         severity: 'warning',
       },
     },
@@ -37,7 +45,7 @@
         %s > %.3f
       ||| % [_recordingrule.record, slo.critical],
       'for': '5m',
-      labels: {
+      labels: labels {
         severity: 'critical',
       },
     },
