@@ -1,11 +1,18 @@
+local util = import '_util.libsonnet';
+
 {
   errors(param):: {
     local slo = {
       metric: error 'must set metric for errors',
       selectors: error 'must set selectors for errors',
+      labels: [],
       rate: '5m',
       codeSelector: 'code',
     } + param,
+
+    local labels =
+      util.selectorsToLabels(slo.selectors) +
+      util.selectorsToLabels(slo.labels),
 
     local recordingrule = {
       expr: |||
@@ -24,6 +31,7 @@
         slo.metric,
         slo.rate,
       ],
+      labels: labels,
     },
     recordingrule: recordingrule,
 
@@ -40,7 +48,7 @@
         slo.warning,
       ],
       'for': '5m',
-      labels: {
+      labels: labels {
         severity: 'warning',
       },
     },
@@ -58,7 +66,7 @@
         slo.critical,
       ],
       'for': '5m',
-      labels: {
+      labels: labels {
         severity: 'critical',
       },
     },
