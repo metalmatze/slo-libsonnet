@@ -33,6 +33,24 @@ alerts:
     job: fooapp
     namespace: default
     severity: warning
+- alert: ErrorBudgetBurn
+  expr: |
+    (
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate1d{namespace="default",job="fooapp"} > (3*0.001000)
+      and
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate2h{namespace="default",job="fooapp"} > (3*0.001000)
+    )
+    or
+    (
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate3d{namespace="default",job="fooapp"} > (0.001000)
+      and
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate6h{namespace="default",job="fooapp"} > (0.001000)
+    )
+  labels:
+    job: fooapp
+    namespace: default
+    severity: warning
+    window: 30d
 recordingrule:
 - expr: |
     sum by (status_class) (
