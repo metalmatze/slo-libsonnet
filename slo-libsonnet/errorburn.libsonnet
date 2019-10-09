@@ -18,13 +18,17 @@ local errors = import 'errors.libsonnet';
       ]
     },
 
-    local errorRates = [
+    local errorRatesWithRate = [
       errors.errors({
         metric: slo.metric,
         selectors: slo.selectors,
         rate: rate,
         statusCode: slo.statusCode,
-      }).recordingrule
+      }).recordingrule {
+        // We need to communicate the rate to the errorPercentage step
+        // They will be remove after that again
+        labels+: { __tmpRate__: rate },
+      }
       for rate in rates
     ],
 
@@ -40,11 +44,25 @@ local errors = import 'errors.libsonnet';
           err.record,
           std.join(',', slo.selectors),
         ],
-        record: 'errors:%s' % err.record,
+        record: 'status_class_5xx:%s:ratio_rate%s' % [slo.metric, err.labels.__tmpRate__],
         labels: labels,
       }
-      for err in errorRates
+      for err in errorRatesWithRate
     ],
+
+    // Remove __tmpRate__ label from errorRates rules again
+    local errorRates = std.map(
+      function(rule) rule {
+        local ls = super.labels,
+        labels: {
+          [k]: ls[k]
+          for k in std.objectFields(ls)
+          if !std.setMember(k, ['__tmpRate__'])
+        },
+      },
+      errorRatesWithRate,
+    ),
+
     recordingrules: errorRates + errorPercentages,
 
     local multiBurnRate30d = [
