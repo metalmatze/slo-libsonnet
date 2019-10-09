@@ -1,19 +1,18 @@
+local util = import '_util.libsonnet';
+
 {
   errorbudget(param):: {
     local slo = {
       metric: error 'must set metric for errorburn',
       selectors: error 'must set selectors for errorburn',
       errorBudget: error 'must set errorBudget for errorburn',
+      labels: [],
       statusCode: 'code',
     } + param,
 
-    local labels = {
-      [s[0]]: std.strReplace(s[1], '"', '')
-      for s in [
-        std.split(s, '=')
-        for s in slo.selectors
-      ]
-    },
+    local labels =
+      util.selectorsToLabels(slo.selectors) +
+      util.selectorsToLabels(slo.labels),
 
     local requestsTotal = {
       record: 'status_code:%s:increase30d:sum' % slo.metric,
