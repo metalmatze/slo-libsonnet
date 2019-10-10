@@ -7,7 +7,7 @@ local util = import '_util.libsonnet';
       selectors: error 'must set selectors for errorburn',
       errorBudget: error 'must set errorBudget for errorburn',
       labels: [],
-      statusCode: 'code',
+      codeSelector: 'code',
     } + param,
 
     local labels =
@@ -21,7 +21,7 @@ local util = import '_util.libsonnet';
       ||| % [
         slo.metric,
         std.join(',', slo.selectors),
-        slo.statusCode,
+        slo.codeSelector,
       ],
       labels: labels,
     },
