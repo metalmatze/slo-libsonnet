@@ -7,7 +7,7 @@ local util = import '_util.libsonnet';
       selectors: error 'must set selectors for errorburn',
       errorBudget: error 'must set errorBudget for errorburn',
       labels: [],
-      statusCode: 'code',
+      codeSelector: 'code',
     } + param,
 
     local rates = ['5m', '30m', '1h', '2h', '6h', '1d', '3d'],
@@ -21,7 +21,7 @@ local util = import '_util.libsonnet';
         metric: slo.metric,
         selectors: slo.selectors,
         rate: rate,
-        statusCode: slo.statusCode,
+        codeSelector: slo.codeSelector,
       }).recordingrule {
         // We need to communicate the rate to the errorPercentage step
         // They will be remove after that again
