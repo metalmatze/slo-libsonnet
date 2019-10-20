@@ -6,6 +6,7 @@ local util = import '_util.libsonnet';
       metric: error 'must set metric for errorburn',
       selectors: error 'must set selectors for errorburn',
       errorBudget: error 'must set errorBudget for errorburn',
+      errorBudgetMetric: self.metric + "_errorbudget",
       labels: [],
       codeSelector: 'code',
     } + param,
@@ -15,9 +16,9 @@ local util = import '_util.libsonnet';
       util.selectorsToLabels(slo.labels),
 
     local requestsTotal = {
-      record: 'status_code:%s:increase30d:sum' % slo.metric,
+      record: 'status_class:%s:increase30d' % slo.metric,
       expr: |||
-        sum(label_replace(increase(%s{%s}[30d]), "status_code", "${1}xx", "%s", "([0-9])..")) by (status_code)
+        sum(label_replace(increase(%s{%s}[30d]), "status_class", "${1}xx", "%s", "([0-9])..")) by (status_class)
       ||| % [
         slo.metric,
         std.join(',', slo.selectors),
@@ -26,21 +27,14 @@ local util = import '_util.libsonnet';
       labels: labels,
     },
 
-    local errorsTotal = {
-      record: 'errors:%s' % requestsTotal.record,
-      expr: |||
-        %s{%s}
-      ||| % [
-        requestsTotal.record,
-        std.join(',', slo.selectors + ['status_code="5xx"']),
-      ],
-      labels: labels,
-    },
-
     local errorBudgetRequests = {
-      record: 'errorbudget_requests:%s' % requestsTotal.record,
+      record: '%s_requests' % slo.errorBudgetMetric,
       expr: |||
-        (%f) * sum(%s)
+        (
+          %f
+        *
+          sum(%s)
+        )
       ||| % [
         slo.errorBudget,
         requestsTotal.record,
@@ -49,22 +43,30 @@ local util = import '_util.libsonnet';
     },
 
     local errorBudgetRemaining = {
-      record: 'errorbudget_remaining:%s' % requestsTotal.record,
+      record: '%s_remaining' % slo.errorBudgetMetric,
       expr: |||
-        sum(%s{%s}) - sum(%s{%s})
+        (
+          sum(%s{%s})
+        -
+          sum(%s{%s})
+        )
       ||| % [
         errorBudgetRequests.record,
         std.join(',', slo.selectors),
-        errorsTotal.record,
-        std.join(',', slo.selectors),
+        requestsTotal.record,
+        std.join(',', slo.selectors + ['status_class="5xx"']),
       ],
       labels: labels,
     },
 
     local errorBudget = {
-      record: 'errorbudget:%s' % requestsTotal.record,
+      record: slo.errorBudgetMetric,
       expr: |||
-        %s / %s
+        (
+          %s
+        /
+          %s
+        )
       ||| % [
         errorBudgetRemaining.record,
         errorBudgetRequests.record,
@@ -74,7 +76,6 @@ local util = import '_util.libsonnet';
 
     recordingrules: [
       requestsTotal,
-      errorsTotal,
       errorBudgetRequests,
       errorBudgetRemaining,
       errorBudget,
