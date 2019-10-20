@@ -5,6 +5,7 @@ local slo = import '../slo-libsonnet/slo.libsonnet';
     metric: 'promhttp_metric_handler_requests_total',
     selectors: ['namespace="default"','job="fooapp"'],
     errorBudget: 1-0.999,
+    errorBudgetMetric: 'promhttp_metric_handler_requests_errorbudget',
   }),
 
   // Output these as example
