@@ -33,7 +33,7 @@ local util = import '_util.libsonnet';
         (
           %f
         *
-          sum(%s)
+          sum(%s{%s})
         )
       ||| % [
         slo.errorBudget,
