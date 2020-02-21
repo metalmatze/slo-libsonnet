@@ -38,9 +38,9 @@ local util = import '_util.libsonnet';
           sum(%s{%s})
         ||| % [
           err.record,
-          slo.selectors,
+          std.join(',', slo.selectors + ['status_class="5xx"']),
           err.record,
-          slo.selectors,
+          std.join(',', slo.selectors),
         ],
         record: 'status_class_5xx:%s:ratio_rate%s' % [slo.metric, err.labels.__tmpRate__],
         labels: labels,
@@ -80,7 +80,7 @@ local util = import '_util.libsonnet';
           )
         ||| % [
           errorPercentages[2].record,
-          slo.selectors,
+          std.join(',', slo.selectors),
           slo.errorBudget,
           errorPercentages[0].record,
           std.join(',', slo.selectors),
