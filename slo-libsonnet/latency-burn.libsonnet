@@ -33,7 +33,7 @@ local util = import '_util.libsonnet';
     local slo = {
       metric: error 'must set metric for latency burn',
       selectors: error 'must set selectors for latency burn',
-      latencyTheshold: error 'must set latencyTheshold latency burn',
+      latencyTarget: error 'must set latencyTarget latency burn',
       latencyBudget: error 'must set latencyBudget latency burn',
       labels: [],
     } + param,
@@ -58,8 +58,8 @@ local util = import '_util.libsonnet';
 
     local latRule = [
       {
-        # How many percent are above the SLO latency threshold.
-        # First calculate how many requests are below the threshold and
+        # How many percent are above the SLO latency target.
+        # First calculate how many requests are below the target and
         # substract those from 100 percent.
         # This gives the total requests that fail the SLO
         expr: |||
@@ -70,7 +70,7 @@ local util = import '_util.libsonnet';
           )
         ||| % [
           lat.record,
-          slo.latencyTheshold,
+          slo.latencyTarget,
           lat.record,
         ],
         record: 'latency:%s:ratio_rate%s' % [slo.metric, lat.labels.__tmpRate__],
