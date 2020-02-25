@@ -12,7 +12,7 @@ local util = import '_util.libsonnet';
 
     local recordingrule = {
       expr: |||
-        sum (rate(%s{%s}[%s]))
+        sum(rate(%s{%s}[%s])
         )
       ||| % [
         slo.metric,
@@ -60,15 +60,17 @@ local util = import '_util.libsonnet';
     local latRule = [
       {
         expr: |||
-          1 - (sum(%s{%s,le=%s,code!~500})
-          /
-          sum(%s{%s}))
+          1 - (
+            %s{%s,le="%s",code!~"5.."}
+            /
+            %s{%s}
+          )
         ||| % [
           lat.record,
+          std.join(',', slo.selectors),
           slo.latencyTheshold,
-          slo.selectors,
           lat.record,
-          slo.selectors,
+          std.join(',', slo.selectors),
         ],
         record: 'latency:%s:ratio_rate%s' % [slo.metric, lat.labels.__tmpRate__],
         labels: labels,
@@ -96,15 +98,15 @@ local util = import '_util.libsonnet';
         alert: 'ErrorBudgetBurn',
         expr: |||
           (
-            100 * {%s} > (14.4*%f)
+            100 * %s > (14.4*%f)
             and
-            100* {%s} > (14.4*%f)
+            100* %s > (14.4*%f)
           )
           or
           (
-            100 * {%s} > (6*%f) 
+            100 * %s > (6*%f)
             and
-            100 * {%s} > (6*%f)
+            100 * %s > (6*%f)
           )
         ||| % [
           latRule[2].record,
@@ -124,15 +126,15 @@ local util = import '_util.libsonnet';
         alert: 'ErrorBudgetBurn',
         expr: |||
           (
-            100 * {%s} > (3*%f)
+            100 * %s > (3*%f)
             and
-            100 * {%s} > (3*%f)
+            100 * %s > (3*%f)
           )
           or
           (
-            100 * {%s} > (%f)
+            100 * %s > (%f)
             and
-            100 * {%s} > (%f)
+            100 * %s > (%f)
           )
         ||| % [
           latRule[5].record,
