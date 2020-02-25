@@ -43,7 +43,7 @@ local util = import '_util.libsonnet';
     local labels =
       util.selectorsToLabels(slo.selectors),
 
-    local latRates = [
+    local latencyRates = [
       sumRule({
         metric: slo.metric,
         selectors: slo.selectors,
@@ -56,7 +56,7 @@ local util = import '_util.libsonnet';
       for rate in rates
     ],
 
-    local latRule = [
+    local latencyRules = [
       {
         # How many percent are above the SLO latency target.
         # First calculate how many requests are below the target and
@@ -76,7 +76,7 @@ local util = import '_util.libsonnet';
         record: 'latency:%s:ratio_rate%s' % [slo.metric, lat.labels.__tmpRate__],
         labels: labels,
       }
-      for lat in latRates
+      for lat in latencyRates
     ],
 
     // Remove __tmpRate__ label from errorRates rules again
@@ -89,10 +89,10 @@ local util = import '_util.libsonnet';
           if !std.setMember(k, ['__tmpRate__'])
         },
       },
-      latRates,
+      latencyRates,
     ),
 
-    recordingrules: latRuleCleanedUp + latRule,
+    recordingrules: latRuleCleanedUp + latencyRules,
 
     local multiBurnRate30d = [
       {
@@ -112,13 +112,13 @@ local util = import '_util.libsonnet';
             100 * %s > (6*%f)
           )
         ||| % [
-          latRule[2].record,
+          latencyRules[2].record,
           slo.latencyBudget,
-          latRule[0].record,
+          latencyRules[0].record,
           slo.latencyBudget,
-          latRule[4].record,
+          latencyRules[4].record,
           slo.latencyBudget,
-          latRule[1].record,
+          latencyRules[1].record,
           slo.latencyBudget,
         ],
         labels: labels {
@@ -140,13 +140,13 @@ local util = import '_util.libsonnet';
             100 * %s > (%f)
           )
         ||| % [
-          latRule[5].record,
+          latencyRules[5].record,
           slo.latencyBudget,
-          latRule[3].record,
+          latencyRules[3].record,
           slo.latencyBudget,
-          latRule[6].record,
+          latencyRules[6].record,
           slo.latencyBudget,
-          latRule[4].record,
+          latencyRules[4].record,
           slo.latencyBudget,
         ],
         labels: labels {
