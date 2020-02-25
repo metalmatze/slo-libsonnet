@@ -58,6 +58,10 @@ local util = import '_util.libsonnet';
 
     local latRule = [
       {
+        # How many percent are above the SLO latency threshold.
+        # First calculate how many requests are below the threshold and
+        # substract those from 100 percent.
+        # This gives the total requests that fail the SLO
         expr: |||
           1 - (
             %s{le="%s",code!~"5.."}
@@ -93,6 +97,8 @@ local util = import '_util.libsonnet';
     local multiBurnRate30d = [
       {
         alert: 'ErrorBudgetBurn',
+        # Check how many procent are violating the SLO.
+        # Send an alert only when this procent is above the burn rate.
         expr: |||
           (
             100 * %s > (14.4*%f)
