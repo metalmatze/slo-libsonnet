@@ -108,16 +108,12 @@ local util = import '_util.libsonnet';
           )
         ||| % [
           latRule[2].record,
-          std.join(',', slo.selectors),
           slo.latencyBudget,
           latRule[0].record,
-          std.join(',', slo.selectors),
           slo.latencyBudget,
           latRule[4].record,
-          std.join(',', slo.selectors),
           slo.latencyBudget,
           latRule[1].record,
-          std.join(',', slo.selectors),
           slo.latencyBudget,
         ],
         labels: labels {
@@ -140,16 +136,12 @@ local util = import '_util.libsonnet';
           )
         ||| % [
           latRule[5].record,
-          std.join(',', slo.selectors),
           slo.latencyBudget,
           latRule[3].record,
-          std.join(',', slo.selectors),
           slo.latencyBudget,
           latRule[6].record,
-          std.join(',', slo.selectors),
           slo.latencyBudget,
           latRule[4].record,
-          std.join(',', slo.selectors),
           slo.latencyBudget,
         ],
         labels: labels {
