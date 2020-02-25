@@ -12,8 +12,7 @@ local util = import '_util.libsonnet';
 
     local recordingrule = {
       expr: |||
-        sum(rate(%s{%s}[%s])
-        )
+        sum(rate(%s{%s}[%s]))
       ||| % [
         slo.metric,
         std.join(',', slo.selectors),
@@ -61,16 +60,14 @@ local util = import '_util.libsonnet';
       {
         expr: |||
           1 - (
-            %s{%s,le="%s",code!~"5.."}
+            %s{le="%s",code!~"5.."}
             /
-            %s{%s}
+            %s
           )
         ||| % [
           lat.record,
-          std.join(',', slo.selectors),
           slo.latencyTheshold,
           lat.record,
-          std.join(',', slo.selectors),
         ],
         record: 'latency:%s:ratio_rate%s' % [slo.metric, lat.labels.__tmpRate__],
         labels: labels,
