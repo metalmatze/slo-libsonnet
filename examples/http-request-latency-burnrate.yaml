@@ -13,8 +13,8 @@ alerts:
       100 * latency:http_request_duration_seconds_bucket:ratio_rate30m > (6*1.000000)
     )
   labels:
-    handler: upload
-    job: telemeter-server
+    job: fooapp
+    namespace: default
     severity: critical
 - alert: ErrorBudgetBurn
   expr: |
@@ -30,119 +30,77 @@ alerts:
       100 * latency:http_request_duration_seconds_bucket:ratio_rate6h > (1.000000)
     )
   labels:
-    handler: upload
-    job: telemeter-server
+    job: fooapp
+    namespace: default
     severity: warning
 recordingrule:
 - expr: |
-    sum(rate(http_request_duration_seconds_bucket{job="telemeter-server",handler="upload"}[5m]))
-  labels:
-    handler: upload
-    job: telemeter-server
-  record: sum:http_request_duration_seconds_bucket:rate5m
-- expr: |
-    sum(rate(http_request_duration_seconds_bucket{job="telemeter-server",handler="upload"}[30m]))
-  labels:
-    handler: upload
-    job: telemeter-server
-  record: sum:http_request_duration_seconds_bucket:rate30m
-- expr: |
-    sum(rate(http_request_duration_seconds_bucket{job="telemeter-server",handler="upload"}[1h]))
-  labels:
-    handler: upload
-    job: telemeter-server
-  record: sum:http_request_duration_seconds_bucket:rate1h
-- expr: |
-    sum(rate(http_request_duration_seconds_bucket{job="telemeter-server",handler="upload"}[2h]))
-  labels:
-    handler: upload
-    job: telemeter-server
-  record: sum:http_request_duration_seconds_bucket:rate2h
-- expr: |
-    sum(rate(http_request_duration_seconds_bucket{job="telemeter-server",handler="upload"}[6h]))
-  labels:
-    handler: upload
-    job: telemeter-server
-  record: sum:http_request_duration_seconds_bucket:rate6h
-- expr: |
-    sum(rate(http_request_duration_seconds_bucket{job="telemeter-server",handler="upload"}[1d]))
-  labels:
-    handler: upload
-    job: telemeter-server
-  record: sum:http_request_duration_seconds_bucket:rate1d
-- expr: |
-    sum(rate(http_request_duration_seconds_bucket{job="telemeter-server",handler="upload"}[3d]))
-  labels:
-    handler: upload
-    job: telemeter-server
-  record: sum:http_request_duration_seconds_bucket:rate3d
-- expr: |
     1 - (
-      sum:http_request_duration_seconds_bucket:rate5m{le="1",code!~"5.."}
+      sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",le="1",code!~"5.."}[5m]))
       /
-      sum:http_request_duration_seconds_bucket:rate5m
+      sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp"}[5m]))
     )
   labels:
-    handler: upload
-    job: telemeter-server
+    job: fooapp
+    namespace: default
   record: latency:http_request_duration_seconds_bucket:ratio_rate5m
 - expr: |
     1 - (
-      sum:http_request_duration_seconds_bucket:rate30m{le="1",code!~"5.."}
+      sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",le="1",code!~"5.."}[30m]))
       /
-      sum:http_request_duration_seconds_bucket:rate30m
+      sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp"}[30m]))
     )
   labels:
-    handler: upload
-    job: telemeter-server
+    job: fooapp
+    namespace: default
   record: latency:http_request_duration_seconds_bucket:ratio_rate30m
 - expr: |
     1 - (
-      sum:http_request_duration_seconds_bucket:rate1h{le="1",code!~"5.."}
+      sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",le="1",code!~"5.."}[1h]))
       /
-      sum:http_request_duration_seconds_bucket:rate1h
+      sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp"}[1h]))
     )
   labels:
-    handler: upload
-    job: telemeter-server
+    job: fooapp
+    namespace: default
   record: latency:http_request_duration_seconds_bucket:ratio_rate1h
 - expr: |
     1 - (
-      sum:http_request_duration_seconds_bucket:rate2h{le="1",code!~"5.."}
+      sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",le="1",code!~"5.."}[2h]))
       /
-      sum:http_request_duration_seconds_bucket:rate2h
+      sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp"}[2h]))
     )
   labels:
-    handler: upload
-    job: telemeter-server
+    job: fooapp
+    namespace: default
   record: latency:http_request_duration_seconds_bucket:ratio_rate2h
 - expr: |
     1 - (
-      sum:http_request_duration_seconds_bucket:rate6h{le="1",code!~"5.."}
+      sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",le="1",code!~"5.."}[6h]))
       /
-      sum:http_request_duration_seconds_bucket:rate6h
+      sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp"}[6h]))
     )
   labels:
-    handler: upload
-    job: telemeter-server
+    job: fooapp
+    namespace: default
   record: latency:http_request_duration_seconds_bucket:ratio_rate6h
 - expr: |
     1 - (
-      sum:http_request_duration_seconds_bucket:rate1d{le="1",code!~"5.."}
+      sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",le="1",code!~"5.."}[1d]))
       /
-      sum:http_request_duration_seconds_bucket:rate1d
+      sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp"}[1d]))
     )
   labels:
-    handler: upload
-    job: telemeter-server
+    job: fooapp
+    namespace: default
   record: latency:http_request_duration_seconds_bucket:ratio_rate1d
 - expr: |
     1 - (
-      sum:http_request_duration_seconds_bucket:rate3d{le="1",code!~"5.."}
+      sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",le="1",code!~"5.."}[3d]))
       /
-      sum:http_request_duration_seconds_bucket:rate3d
+      sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp"}[3d]))
     )
   labels:
-    handler: upload
-    job: telemeter-server
+    job: fooapp
+    namespace: default
   record: latency:http_request_duration_seconds_bucket:ratio_rate3d
