@@ -19,7 +19,7 @@ local util = import '_util.libsonnet';
       ||| % [
         quantile,
         slo.metric,
-        slo.selectors,
+        std.join(',', slo.selectors),,
       ],
       record: '%s:histogram_quantile' % slo.metric,
 
