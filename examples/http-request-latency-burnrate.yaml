@@ -2,15 +2,15 @@ alerts:
 - alert: ErrorBudgetBurn
   expr: |
     (
-      100 * latency1s:http_request_duration_seconds_bucket:rate1h > (14.4*1.000000)
+      100 * latency1s:http_request_duration_seconds:rate1h > (14.4*1.000000)
       and
-      100* latency1s:http_request_duration_seconds_bucket:rate5m > (14.4*1.000000)
+      100* latency1s:http_request_duration_seconds:rate5m > (14.4*1.000000)
     )
     or
     (
-      100 * latency1s:http_request_duration_seconds_bucket:rate6h > (6*1.000000)
+      100 * latency1s:http_request_duration_seconds:rate6h > (6*1.000000)
       and
-      100 * latency1s:http_request_duration_seconds_bucket:rate30m > (6*1.000000)
+      100 * latency1s:http_request_duration_seconds:rate30m > (6*1.000000)
     )
   labels:
     job: fooapp
@@ -19,15 +19,15 @@ alerts:
 - alert: ErrorBudgetBurn
   expr: |
     (
-      100 * latency1s:http_request_duration_seconds_bucket:rate1d > (3*1.000000)
+      100 * latency1s:http_request_duration_seconds:rate1d > (3*1.000000)
       and
-      100 * latency1s:http_request_duration_seconds_bucket:rate2h > (3*1.000000)
+      100 * latency1s:http_request_duration_seconds:rate2h > (3*1.000000)
     )
     or
     (
-      100 * latency1s:http_request_duration_seconds_bucket:rate3d > (1.000000)
+      100 * latency1s:http_request_duration_seconds:rate3d > (1.000000)
       and
-      100 * latency1s:http_request_duration_seconds_bucket:rate6h > (1.000000)
+      100 * latency1s:http_request_duration_seconds:rate6h > (1.000000)
     )
   labels:
     job: fooapp
@@ -38,69 +38,69 @@ recordingrule:
     1 - (
       sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",le="1",code!~"5.."}[5m]))
       /
-      sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp"}[5m]))
+      sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp"}[5m]))
     )
   labels:
     job: fooapp
     namespace: default
-  record: latency1s:http_request_duration_seconds_bucket:rate5m
+  record: latency1s:http_request_duration_seconds:rate5m
 - expr: |
     1 - (
       sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",le="1",code!~"5.."}[30m]))
       /
-      sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp"}[30m]))
+      sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp"}[30m]))
     )
   labels:
     job: fooapp
     namespace: default
-  record: latency1s:http_request_duration_seconds_bucket:rate30m
+  record: latency1s:http_request_duration_seconds:rate30m
 - expr: |
     1 - (
       sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",le="1",code!~"5.."}[1h]))
       /
-      sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp"}[1h]))
+      sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp"}[1h]))
     )
   labels:
     job: fooapp
     namespace: default
-  record: latency1s:http_request_duration_seconds_bucket:rate1h
+  record: latency1s:http_request_duration_seconds:rate1h
 - expr: |
     1 - (
       sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",le="1",code!~"5.."}[2h]))
       /
-      sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp"}[2h]))
+      sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp"}[2h]))
     )
   labels:
     job: fooapp
     namespace: default
-  record: latency1s:http_request_duration_seconds_bucket:rate2h
+  record: latency1s:http_request_duration_seconds:rate2h
 - expr: |
     1 - (
       sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",le="1",code!~"5.."}[6h]))
       /
-      sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp"}[6h]))
+      sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp"}[6h]))
     )
   labels:
     job: fooapp
     namespace: default
-  record: latency1s:http_request_duration_seconds_bucket:rate6h
+  record: latency1s:http_request_duration_seconds:rate6h
 - expr: |
     1 - (
       sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",le="1",code!~"5.."}[1d]))
       /
-      sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp"}[1d]))
+      sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp"}[1d]))
     )
   labels:
     job: fooapp
     namespace: default
-  record: latency1s:http_request_duration_seconds_bucket:rate1d
+  record: latency1s:http_request_duration_seconds:rate1d
 - expr: |
     1 - (
       sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",le="1",code!~"5.."}[3d]))
       /
-      sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp"}[3d]))
+      sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp"}[3d]))
     )
   labels:
     job: fooapp
     namespace: default
-  record: latency1s:http_request_duration_seconds_bucket:rate3d
+  record: latency1s:http_request_duration_seconds:rate3d

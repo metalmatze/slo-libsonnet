@@ -27,11 +27,11 @@ local util = import '_util.libsonnet';
             sum(rate(%s{%s}[%s]))
           )
         ||| % [
-          slo.metric,
+          slo.metric + "_bucket",
           std.join(',', slo.selectors),
           slo.latencyTarget,
           rate,
-          slo.metric,
+          slo.metric + "_count",
           std.join(',', slo.selectors),
           rate,
         ],

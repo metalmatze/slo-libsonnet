@@ -2,7 +2,7 @@ local latency = import '../slo-libsonnet/latency-burn.libsonnet';
 
 {
   local query = latency.burn({
-    metric: 'http_request_duration_seconds_bucket',
+    metric: 'http_request_duration_seconds',
     selectors: ['namespace="default"','job="fooapp"'],
     # How much responce delay is too much.
     latencyTarget: "1",
