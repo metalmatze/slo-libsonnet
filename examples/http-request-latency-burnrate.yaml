@@ -2,15 +2,15 @@ alerts:
 - alert: ErrorBudgetBurn
   expr: |
     (
-      100 * latency1s:http_request_duration_seconds:rate1h > (14.4*1.000000)
+      latency1s:http_request_duration_seconds:rate1h > (14.4*0.010000)
       and
-      100* latency1s:http_request_duration_seconds:rate5m > (14.4*1.000000)
+      latency1s:http_request_duration_seconds:rate5m > (14.4*0.010000)
     )
     or
     (
-      100 * latency1s:http_request_duration_seconds:rate6h > (6*1.000000)
+      latency1s:http_request_duration_seconds:rate6h > (6*0.010000)
       and
-      100 * latency1s:http_request_duration_seconds:rate30m > (6*1.000000)
+      latency1s:http_request_duration_seconds:rate30m > (6*0.010000)
     )
   labels:
     job: fooapp
@@ -19,15 +19,15 @@ alerts:
 - alert: ErrorBudgetBurn
   expr: |
     (
-      100 * latency1s:http_request_duration_seconds:rate1d > (3*1.000000)
+      latency1s:http_request_duration_seconds:rate1d > (3*0.010000)
       and
-      100 * latency1s:http_request_duration_seconds:rate2h > (3*1.000000)
+      latency1s:http_request_duration_seconds:rate2h > (3*0.010000)
     )
     or
     (
-      100 * latency1s:http_request_duration_seconds:rate3d > (1.000000)
+      latency1s:http_request_duration_seconds:rate3d > (0.010000)
       and
-      100 * latency1s:http_request_duration_seconds:rate6h > (1.000000)
+      latency1s:http_request_duration_seconds:rate6h > (0.010000)
     )
   labels:
     job: fooapp

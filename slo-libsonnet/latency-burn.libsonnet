@@ -50,15 +50,15 @@ local util = import '_util.libsonnet';
         # Send an alert only when this procent is above the burn rate.
         expr: |||
           (
-            100 * %s > (14.4*%f)
+            %s > (14.4*%f)
             and
-            100* %s > (14.4*%f)
+            %s > (14.4*%f)
           )
           or
           (
-            100 * %s > (6*%f)
+            %s > (6*%f)
             and
-            100 * %s > (6*%f)
+            %s > (6*%f)
           )
         ||| % [
           latencyRules[2].record,
@@ -78,15 +78,15 @@ local util = import '_util.libsonnet';
         alert: 'ErrorBudgetBurn',
         expr: |||
           (
-            100 * %s > (3*%f)
+            %s > (3*%f)
             and
-            100 * %s > (3*%f)
+            %s > (3*%f)
           )
           or
           (
-            100 * %s > (%f)
+            %s > (%f)
             and
-            100 * %s > (%f)
+            %s > (%f)
           )
         ||| % [
           latencyRules[5].record,

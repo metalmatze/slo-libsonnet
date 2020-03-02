@@ -9,7 +9,7 @@ local latency = import '../slo-libsonnet/latency-burn.libsonnet';
     # The 30 days SLO promise.
     # When the promise is 99% that means that
     # in 30d can only have 1% queries above the latencyTarget.
-    latencyBudget: 100-99,
+    latencyBudget: 1-0.99,
   }),
 
   // The actual output results.
