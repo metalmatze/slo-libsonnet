@@ -16,10 +16,10 @@ local util = import '_util.libsonnet';
 
     local latencyRules = [
       {
-        # How many percent are above the SLO latency target.
-        # First calculate how many requests are below the target and
-        # substract those from 100 percent.
-        # This gives the total requests that fail the SLO
+        // How many percent are above the SLO latency target.
+        // First calculate how many requests are below the target and
+        // substract those from 100 percent.
+        // This gives the total requests that fail the SLO
         expr: |||
           1 - (
             sum(rate(%s{%s,le="%s",code!~"5.."}[%s]))
@@ -27,11 +27,12 @@ local util = import '_util.libsonnet';
             sum(rate(%s{%s}[%s]))
           )
         ||| % [
-          slo.metric + "_bucket",
+          slo.metric + '_bucket',
           std.join(',', slo.selectors),
           slo.latencyTarget,
+          slo.codeSelector,
           rate,
-          slo.metric + "_count",
+          slo.metric + '_count',
           std.join(',', slo.selectors),
           rate,
         ],
@@ -46,8 +47,8 @@ local util = import '_util.libsonnet';
     local multiBurnRate30d = [
       {
         alert: 'ErrorBudgetBurn',
-        # Check how many procent are violating the SLO.
-        # Send an alert only when this procent is above the burn rate.
+        // Check how many procent are violating the SLO.
+        // Send an alert only when this procent is above the burn rate.
         expr: |||
           (
             %s > (14.4*%f)
