@@ -1,6 +1,6 @@
 local util = import '_util.libsonnet';
 {
-  burn(param):: {
+  latencyburn(param):: {
     local slo = {
       metric: error 'must set metric for latency burn',
       selectors: error 'must set selectors for latency burn',
