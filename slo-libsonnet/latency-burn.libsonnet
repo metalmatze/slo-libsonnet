@@ -7,6 +7,7 @@ local util = import '_util.libsonnet';
       latencyTarget: error 'must set latencyTarget latency burn',
       latencyBudget: error 'must set latencyBudget latency burn',
       labels: [],
+      codeSelector: 'code',
     } + param,
 
     local rates = ['5m', '30m', '1h', '2h', '6h', '1d', '3d'],
@@ -22,7 +23,7 @@ local util = import '_util.libsonnet';
         // This gives the total requests that fail the SLO
         expr: |||
           1 - (
-            sum(rate(%s{%s,le="%s",code!~"5.."}[%s]))
+            sum(rate(%s{%s,le="%s",%s!~"5.."}[%s]))
             /
             sum(rate(%s{%s}[%s]))
           )
