@@ -15,6 +15,7 @@ local util = import '_util.libsonnet';
     local labels =
       util.selectorsToLabels(slo.selectors),
 
+
     local latencyRules = [
       {
         // How many percent are above the SLO latency target.
@@ -52,24 +53,28 @@ local util = import '_util.libsonnet';
         // Send an alert only when this procent is above the burn rate.
         expr: |||
           (
-            %s > (14.4*%f)
+            %s{%s} > (14.4*%f)
             and
-            %s > (14.4*%f)
+            %s{%s} > (14.4*%f)
           )
           or
           (
-            %s > (6*%f)
+            %s{%s} > (6*%f)
             and
-            %s > (6*%f)
+            %s{%s} > (6*%f)
           )
         ||| % [
           latencyRules[2].record,
+          std.join(',', slo.selectors),
           slo.latencyBudget,
           latencyRules[0].record,
+          std.join(',', slo.selectors),
           slo.latencyBudget,
           latencyRules[4].record,
+          std.join(',', slo.selectors),
           slo.latencyBudget,
           latencyRules[1].record,
+          std.join(',', slo.selectors),
           slo.latencyBudget,
         ],
         labels: labels {
@@ -80,24 +85,28 @@ local util = import '_util.libsonnet';
         alert: 'ErrorBudgetBurn',
         expr: |||
           (
-            %s > (3*%f)
+            %s{%s} > (3*%f)
             and
-            %s > (3*%f)
+            %s{%s} > (3*%f)
           )
           or
           (
-            %s > (%f)
+            %s{%s} > (%f)
             and
-            %s > (%f)
+            %s{%s} > (%f)
           )
         ||| % [
           latencyRules[5].record,
+          std.join(',', slo.selectors),
           slo.latencyBudget,
           latencyRules[3].record,
+          std.join(',', slo.selectors),
           slo.latencyBudget,
           latencyRules[6].record,
+          std.join(',', slo.selectors),
           slo.latencyBudget,
           latencyRules[4].record,
+          std.join(',', slo.selectors),
           slo.latencyBudget,
         ],
         labels: labels {
