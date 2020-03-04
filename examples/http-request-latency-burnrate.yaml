@@ -2,15 +2,15 @@ alerts:
 - alert: ErrorBudgetBurn
   expr: |
     (
-      latencytarget:http_request_duration_seconds:rate1h > (14.4*0.010000)
+      latencytarget:http_request_duration_seconds:rate1h{namespace="default",job="fooapp"} > (14.4*0.010000)
       and
-      latencytarget:http_request_duration_seconds:rate5m > (14.4*0.010000)
+      latencytarget:http_request_duration_seconds:rate5m{namespace="default",job="fooapp"} > (14.4*0.010000)
     )
     or
     (
-      latencytarget:http_request_duration_seconds:rate6h > (6*0.010000)
+      latencytarget:http_request_duration_seconds:rate6h{namespace="default",job="fooapp"} > (6*0.010000)
       and
-      latencytarget:http_request_duration_seconds:rate30m > (6*0.010000)
+      latencytarget:http_request_duration_seconds:rate30m{namespace="default",job="fooapp"} > (6*0.010000)
     )
   labels:
     job: fooapp
@@ -19,15 +19,15 @@ alerts:
 - alert: ErrorBudgetBurn
   expr: |
     (
-      latencytarget:http_request_duration_seconds:rate1d > (3*0.010000)
+      latencytarget:http_request_duration_seconds:rate1d{namespace="default",job="fooapp"} > (3*0.010000)
       and
-      latencytarget:http_request_duration_seconds:rate2h > (3*0.010000)
+      latencytarget:http_request_duration_seconds:rate2h{namespace="default",job="fooapp"} > (3*0.010000)
     )
     or
     (
-      latencytarget:http_request_duration_seconds:rate3d > (0.010000)
+      latencytarget:http_request_duration_seconds:rate3d{namespace="default",job="fooapp"} > (0.010000)
       and
-      latencytarget:http_request_duration_seconds:rate6h > (0.010000)
+      latencytarget:http_request_duration_seconds:rate6h{namespace="default",job="fooapp"} > (0.010000)
     )
   labels:
     job: fooapp
