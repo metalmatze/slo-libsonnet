@@ -96,7 +96,7 @@ local util = import '_util.libsonnet';
           severity: 'critical',
         },
         annotations: |||
-          summary: "High requests error budget burn for %s"
+          summary: "High requests error budget burn for %s (current value: {{ $value }})"
         ||| % [ std.strReplace(std.join(',',slo.selectors), '"', '') ],
       },
       {
@@ -131,7 +131,7 @@ local util = import '_util.libsonnet';
           severity: 'warning',
         },
         annotations: |||
-          summary: "High requests error budget burn for %s"
+          summary: "High requests error budget burn for %s (current value: {{ $value }})"
         ||| % [ std.strReplace(std.join(',',slo.selectors), '"', '') ],
       },
     ],
