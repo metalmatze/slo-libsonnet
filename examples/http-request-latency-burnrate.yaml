@@ -21,7 +21,7 @@ alerts:
     severity: critical
 - alert: LatencyBudgetBurn
   annotations:
-    summary: 'High requests latency budget burn for namespace=default,job=fooapp (current
+    message: 'High requests latency budget burn for namespace=default,job=fooapp (current
       value: {{ $value }})'
   expr: |
     (
