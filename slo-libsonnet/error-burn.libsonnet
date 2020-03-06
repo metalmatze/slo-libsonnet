@@ -1,5 +1,5 @@
-local errors = import 'errors.libsonnet';
 local util = import '_util.libsonnet';
+local errors = import 'errors.libsonnet';
 {
   errorburn(param):: {
     local slo = {
@@ -95,9 +95,9 @@ local util = import '_util.libsonnet';
         labels: labels {
           severity: 'critical',
         },
-        annotations: |||
-          summary: "High requests error budget burn for %s (current value: {{ $value }})"
-        ||| % [ std.strReplace(std.join(',',slo.selectors), '"', '') ],
+        annotations: {
+          message: 'High requests error budget burn for %s (current value: {{ $value }})' % [std.strReplace(std.join(',', slo.selectors), '"', '')],
+        },
       },
       {
         alert: 'ErrorBudgetBurn',
@@ -130,9 +130,9 @@ local util = import '_util.libsonnet';
         labels: labels {
           severity: 'warning',
         },
-        annotations: |||
-          message: "High requests error budget burn for %s (current value: {{ $value }})"
-        ||| % [ std.strReplace(std.join(',',slo.selectors), '"', '') ],
+        annotations: {
+          message: 'High requests error budget burn for %s (current value: {{ $value }})' % [std.strReplace(std.join(',', slo.selectors), '"', '')],
+        },
       },
     ],
 

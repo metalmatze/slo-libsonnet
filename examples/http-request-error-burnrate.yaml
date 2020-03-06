@@ -1,7 +1,8 @@
 alerts:
 - alert: ErrorBudgetBurn
-  annotations: |
-    summary: "High requests error budget burn for namespace=default,job=fooapp (current value: {{ $value }})"
+  annotations:
+    message: 'High requests error budget burn for namespace=default,job=fooapp (current
+      value: {{ $value }})'
   expr: |
     (
       status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate1h{namespace="default",job="fooapp"} > (14.4*0.001000)
@@ -19,8 +20,9 @@ alerts:
     namespace: default
     severity: critical
 - alert: ErrorBudgetBurn
-  annotations: |
-    message: "High requests error budget burn for namespace=default,job=fooapp (current value: {{ $value }})"
+  annotations:
+    message: 'High requests error budget burn for namespace=default,job=fooapp (current
+      value: {{ $value }})'
   expr: |
     (
       status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate1d{namespace="default",job="fooapp"} > (3*0.001000)
