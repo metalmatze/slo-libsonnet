@@ -48,7 +48,7 @@ local util = import '_util.libsonnet';
 
     local multiBurnRate30d = [
       {
-        alert: 'ErrorBudgetBurn',
+        alert: 'LatencyBudgetBurn',
         // Check how many procent are violating the SLO.
         // Send an alert only when this procent is above the burn rate.
         expr: |||
@@ -80,9 +80,12 @@ local util = import '_util.libsonnet';
         labels: labels {
           severity: 'critical',
         },
+        annotations: |||
+          message: "High requests latency budget burn for %s (current value: {{ $value }})"
+        ||| % [ std.strReplace(std.join(',',slo.selectors), '"', '') ],
       },
       {
-        alert: 'ErrorBudgetBurn',
+        alert: 'LatencyBudgetBurn',
         expr: |||
           (
             %s{%s} > (3*%f)
@@ -112,6 +115,9 @@ local util = import '_util.libsonnet';
         labels: labels {
           severity: 'warning',
         },
+        annotations: |||
+          summary: "High requests latency budget burn for %s (current value: {{ $value }})"
+        ||| % [ std.strReplace(std.join(',',slo.selectors), '"', '') ],
       },
     ],
 
