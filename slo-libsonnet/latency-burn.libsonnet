@@ -81,7 +81,7 @@ local util = import '_util.libsonnet';
           severity: 'critical',
         },
         annotations: |||
-          summary: "High requests latency budget burn for %s (current value: {{ $value }})"
+          message: "High requests latency budget burn for %s (current value: {{ $value }})"
         ||| % [ std.strReplace(std.join(',',slo.selectors), '"', '') ],
       },
       {

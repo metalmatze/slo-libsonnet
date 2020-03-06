@@ -1,7 +1,7 @@
 alerts:
 - alert: LatencyBudgetBurn
   annotations: |
-    summary: "High requests latency budget burn for namespace=default,job=fooapp (current value: {{ $value }})"
+    message: "High requests latency budget burn for namespace=default,job=fooapp (current value: {{ $value }})"
   expr: |
     (
       latencytarget:http_request_duration_seconds:rate1h{namespace="default",job="fooapp"} > (14.4*0.010000)
