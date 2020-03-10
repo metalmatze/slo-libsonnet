@@ -12,9 +12,7 @@ local util = import '_util.libsonnet';
 
     local rates = ['5m', '30m', '1h', '2h', '6h', '1d', '3d'],
 
-    local labels =
-      util.selectorsToLabels(slo.selectors),
-
+    local rulesSelectors = slo.selectors + ['latency="' + slo.latencyTarget + '"'],
 
     local latencyRules = [
       {
@@ -39,7 +37,7 @@ local util = import '_util.libsonnet';
           rate,
         ],
         record: 'latencytarget:%s:rate%s' % [slo.metric, rate],
-        labels: labels,
+        labels: util.selectorsToLabels(rulesSelectors),
       }
       for rate in rates
     ],
@@ -65,23 +63,23 @@ local util = import '_util.libsonnet';
           )
         ||| % [
           latencyRules[2].record,
-          std.join(',', slo.selectors),
+          std.join(',', rulesSelectors),
           slo.latencyBudget,
           latencyRules[0].record,
-          std.join(',', slo.selectors),
+          std.join(',', rulesSelectors),
           slo.latencyBudget,
           latencyRules[4].record,
-          std.join(',', slo.selectors),
+          std.join(',', rulesSelectors),
           slo.latencyBudget,
           latencyRules[1].record,
-          std.join(',', slo.selectors),
+          std.join(',', rulesSelectors),
           slo.latencyBudget,
         ],
-        labels: labels {
+        labels: util.selectorsToLabels(rulesSelectors) {
           severity: 'critical',
         },
         annotations: {
-          message: 'High requests latency budget burn for %s (current value: {{ $value }})' % [std.strReplace(std.join(',', slo.selectors), '"', '')],
+          message: 'High requests latency budget burn for %s (current value: {{ $value }})' % [std.strReplace(std.join(',', rulesSelectors), '"', '')],
         },
       },
       {
@@ -100,23 +98,23 @@ local util = import '_util.libsonnet';
           )
         ||| % [
           latencyRules[5].record,
-          std.join(',', slo.selectors),
+          std.join(',', rulesSelectors),
           slo.latencyBudget,
           latencyRules[3].record,
-          std.join(',', slo.selectors),
+          std.join(',', rulesSelectors),
           slo.latencyBudget,
           latencyRules[6].record,
-          std.join(',', slo.selectors),
+          std.join(',', rulesSelectors),
           slo.latencyBudget,
           latencyRules[4].record,
-          std.join(',', slo.selectors),
+          std.join(',', rulesSelectors),
           slo.latencyBudget,
         ],
-        labels: labels {
+        labels: util.selectorsToLabels(rulesSelectors) {
           severity: 'warning',
         },
         annotations: {
-          message: 'High requests latency budget burn for %s (current value: {{ $value }})' % [std.strReplace(std.join(',', slo.selectors), '"', '')],
+          message: 'High requests latency budget burn for %s (current value: {{ $value }})' % [std.strReplace(std.join(',', rulesSelectors), '"', '')],
         },
       },
     ],
