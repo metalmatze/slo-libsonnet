@@ -2,7 +2,7 @@ local util = import '_util.libsonnet';
 {
   latencyburn(param):: {
     local slo = {
-      alertName: error 'must set alert name for latency burn',
+      alertName: 'LatencyBudgetBurn',
       metric: error 'must set metric for latency burn',
       selectors: error 'must set selectors for latency burn',
       latencyTarget: error 'must set latencyTarget latency burn',

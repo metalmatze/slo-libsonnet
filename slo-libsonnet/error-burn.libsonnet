@@ -3,7 +3,7 @@ local errors = import 'errors.libsonnet';
 {
   errorburn(param):: {
     local slo = {
-      alertName: error 'must set alert name for error burn',
+      alertName: 'ErrorBudgetBurn',
       metric: error 'must set metric for error burn',
       selectors: error 'must set selectors for error burn',
       errorBudget: error 'must set errorBudget for error burn',
