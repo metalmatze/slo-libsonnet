@@ -3,9 +3,10 @@ local errors = import 'errors.libsonnet';
 {
   errorburn(param):: {
     local slo = {
-      metric: error 'must set metric for errorburn',
-      selectors: error 'must set selectors for errorburn',
-      errorBudget: error 'must set errorBudget for errorburn',
+      alertName: error 'must set alert name for error burn',
+      metric: error 'must set metric for error burn',
+      selectors: error 'must set selectors for error burn',
+      errorBudget: error 'must set errorBudget for error burn',
       labels: [],
       codeSelector: 'code',
     } + param,
@@ -65,7 +66,7 @@ local errors = import 'errors.libsonnet';
 
     local multiBurnRate30d = [
       {
-        alert: 'ErrorBudgetBurn',
+        alert: slo.alertName,
         expr: |||
           (
             %s{%s} > (14.4*%f)
@@ -100,7 +101,7 @@ local errors = import 'errors.libsonnet';
         },
       },
       {
-        alert: 'ErrorBudgetBurn',
+        alert: slo.alertName,
         expr: |||
           (
             %s{%s} > (3*%f)

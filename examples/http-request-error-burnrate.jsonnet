@@ -2,6 +2,7 @@ local slo = import '../slo-libsonnet/slo.libsonnet';
 
 {
   local errorburnrate = slo.errorburn({
+    alertName: 'ErrorBudgetBurn',
     // This metric probably doesn't make a lot of sense.
     // However, it is availabe on every Prometheus by default.
     metric: 'promhttp_metric_handler_requests_total',
