@@ -8,8 +8,7 @@
           "subdir": "grafonnet"
         }
       },
-      "version": "master",
-      "name": "grafonnet"
+      "version": "master"
     }
   ],
   "legacyImports": true
