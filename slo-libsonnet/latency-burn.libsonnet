@@ -2,6 +2,7 @@ local util = import '_util.libsonnet';
 {
   latencyburn(param):: {
     local slo = {
+      alertName: 'LatencyBudgetBurn',
       metric: error 'must set metric for latency burn',
       selectors: error 'must set selectors for latency burn',
       latencyTarget: error 'must set latencyTarget latency burn',
@@ -46,7 +47,7 @@ local util = import '_util.libsonnet';
 
     local multiBurnRate30d = [
       {
-        alert: 'LatencyBudgetBurn',
+        alert: slo.alertName,
         // Check how many procent are violating the SLO.
         // Send an alert only when this procent is above the burn rate.
         expr: |||
@@ -83,7 +84,7 @@ local util = import '_util.libsonnet';
         },
       },
       {
-        alert: 'LatencyBudgetBurn',
+        alert: slo.alertName,
         expr: |||
           (
             %s{%s} > (3*%f)
