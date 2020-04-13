@@ -1,9 +1,11 @@
 local util = import '_util.libsonnet';
+local httpRatesLib = import 'http-rates.libsonnet';
 
 {
   errors(param):: {
     local slo = {
       metric: error 'must set metric for errors',
+      recordingRuleMetric: self.metric,
       selectors: error 'must set selectors for errors',
       labels: [],
       rate: '5m',
@@ -13,26 +15,9 @@ local util = import '_util.libsonnet';
     local labels =
       util.selectorsToLabels(slo.selectors) +
       util.selectorsToLabels(slo.labels),
+    local recordingRules = httpRatesLib.httpRates(slo { rates: [slo.rate] }).rateRules,
+    local recordingrule = recordingRules[0],
 
-    local recordingrule = {
-      expr: |||
-        sum by (status_class) (
-          label_replace(
-            rate(%s{%s}[%s]
-          ), "status_class", "${1}xx", "%s", "([0-9])..")
-        )
-      ||| % [
-        slo.metric,
-        std.join(',', slo.selectors),
-        slo.rate,
-        slo.codeSelector,
-      ],
-      record: 'status_class:%s:rate%s' % [
-        slo.metric,
-        slo.rate,
-      ],
-      labels: labels,
-    },
     recordingrule: recordingrule,
 
     alertWarning: {
