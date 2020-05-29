@@ -5,15 +5,15 @@ alerts:
       (current value: {{ $value }})'
   expr: |
     (
-      latencytarget:http_request_duration_seconds:rate1h{namespace="default",job="fooapp",latency="1"} > (14.4*0.010000)
+      latencytarget:http_request_duration_seconds:rate_1h{namespace="default",job="fooapp",latency="1"} > (14.4*0.010000)
       and
-      latencytarget:http_request_duration_seconds:rate5m{namespace="default",job="fooapp",latency="1"} > (14.4*0.010000)
+      latencytarget:http_request_duration_seconds:rate_5m{namespace="default",job="fooapp",latency="1"} > (14.4*0.010000)
     )
     or
     (
-      latencytarget:http_request_duration_seconds:rate6h{namespace="default",job="fooapp",latency="1"} > (6*0.010000)
+      latencytarget:http_request_duration_seconds:rate_6h{namespace="default",job="fooapp",latency="1"} > (6*0.010000)
       and
-      latencytarget:http_request_duration_seconds:rate30m{namespace="default",job="fooapp",latency="1"} > (6*0.010000)
+      latencytarget:http_request_duration_seconds:rate_30m{namespace="default",job="fooapp",latency="1"} > (6*0.010000)
     )
   labels:
     job: fooapp
@@ -26,15 +26,15 @@ alerts:
       (current value: {{ $value }})'
   expr: |
     (
-      latencytarget:http_request_duration_seconds:rate1d{namespace="default",job="fooapp",latency="1"} > (3*0.010000)
+      latencytarget:http_request_duration_seconds:rate_1d{namespace="default",job="fooapp",latency="1"} > (3*0.010000)
       and
-      latencytarget:http_request_duration_seconds:rate2h{namespace="default",job="fooapp",latency="1"} > (3*0.010000)
+      latencytarget:http_request_duration_seconds:rate_2h{namespace="default",job="fooapp",latency="1"} > (3*0.010000)
     )
     or
     (
-      latencytarget:http_request_duration_seconds:rate3d{namespace="default",job="fooapp",latency="1"} > (0.010000)
+      latencytarget:http_request_duration_seconds:rate_3d{namespace="default",job="fooapp",latency="1"} > (0.010000)
       and
-      latencytarget:http_request_duration_seconds:rate6h{namespace="default",job="fooapp",latency="1"} > (0.010000)
+      latencytarget:http_request_duration_seconds:rate_6h{namespace="default",job="fooapp",latency="1"} > (0.010000)
     )
   labels:
     job: fooapp
@@ -52,7 +52,7 @@ recordingrule:
     job: fooapp
     latency: "1"
     namespace: default
-  record: latencytarget:http_request_duration_seconds:rate5m
+  record: latencytarget:http_request_duration_seconds:rate_5m
 - expr: |
     1 - (
       sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",le="1",code!~"5.."}[30m]))
@@ -63,7 +63,7 @@ recordingrule:
     job: fooapp
     latency: "1"
     namespace: default
-  record: latencytarget:http_request_duration_seconds:rate30m
+  record: latencytarget:http_request_duration_seconds:rate_30m
 - expr: |
     1 - (
       sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",le="1",code!~"5.."}[1h]))
@@ -74,7 +74,7 @@ recordingrule:
     job: fooapp
     latency: "1"
     namespace: default
-  record: latencytarget:http_request_duration_seconds:rate1h
+  record: latencytarget:http_request_duration_seconds:rate_1h
 - expr: |
     1 - (
       sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",le="1",code!~"5.."}[2h]))
@@ -85,7 +85,7 @@ recordingrule:
     job: fooapp
     latency: "1"
     namespace: default
-  record: latencytarget:http_request_duration_seconds:rate2h
+  record: latencytarget:http_request_duration_seconds:rate_2h
 - expr: |
     1 - (
       sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",le="1",code!~"5.."}[6h]))
@@ -96,7 +96,7 @@ recordingrule:
     job: fooapp
     latency: "1"
     namespace: default
-  record: latencytarget:http_request_duration_seconds:rate6h
+  record: latencytarget:http_request_duration_seconds:rate_6h
 - expr: |
     1 - (
       sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",le="1",code!~"5.."}[1d]))
@@ -107,7 +107,7 @@ recordingrule:
     job: fooapp
     latency: "1"
     namespace: default
-  record: latencytarget:http_request_duration_seconds:rate1d
+  record: latencytarget:http_request_duration_seconds:rate_1d
 - expr: |
     1 - (
       sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",le="1",code!~"5.."}[3d]))
@@ -118,4 +118,4 @@ recordingrule:
     job: fooapp
     latency: "1"
     namespace: default
-  record: latencytarget:http_request_duration_seconds:rate3d
+  record: latencytarget:http_request_duration_seconds:rate_3d

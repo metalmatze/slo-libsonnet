@@ -10,10 +10,6 @@ local util = import '_util.libsonnet';
       codeSelector: 'code',
     } + param,
 
-    local labels =
-      util.selectorsToLabels(slo.selectors) +
-      util.selectorsToLabels(slo.labels),
-
     local recordingrule = {
       expr: |||
         sum by (status_class) (
@@ -27,11 +23,12 @@ local util = import '_util.libsonnet';
         slo.rate,
         slo.codeSelector,
       ],
-      record: 'status_class:%s:rate%s' % [
-        slo.metric,
+      record: 'rate_%s_by_%s:%s:%s' % [
         slo.rate,
+        slo.codeSelector,
+        slo.metric,
+        std.strReplace(std.strReplace(std.strReplace(std.strReplace(std.join(':', slo.selectors), '=', ':'), '"', ''), '~', ''), '|', '-'),
       ],
-      labels: labels,
     },
     recordingrule: recordingrule,
 
@@ -48,7 +45,7 @@ local util = import '_util.libsonnet';
         slo.warning,
       ],
       'for': '5m',
-      labels: labels {
+      labels: +{
         severity: 'warning',
       },
     },
@@ -66,7 +63,7 @@ local util = import '_util.libsonnet';
         slo.critical,
       ],
       'for': '5m',
-      labels: labels {
+      labels: +{
         severity: 'critical',
       },
     },

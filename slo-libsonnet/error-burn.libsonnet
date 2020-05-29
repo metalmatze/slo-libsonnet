@@ -12,10 +12,7 @@ local errors = import 'errors.libsonnet';
     } + param,
 
     local rates = ['5m', '30m', '1h', '2h', '6h', '1d', '3d'],
-
-    local labels =
-      util.selectorsToLabels(slo.selectors) +
-      util.selectorsToLabels(slo.labels),
+    local labels = util.selectorsToLabels(slo.labels),
 
     local errorRatesWithRate = [
       errors.errors({
@@ -36,14 +33,13 @@ local errors = import 'errors.libsonnet';
         expr: |||
           sum(%s{%s})
           /
-          sum(%s{%s})
+          sum(%s)
         ||| % [
           err.record,
-          std.join(',', slo.selectors + ['status_class="5xx"']),
+          'status_class="5xx"',
           err.record,
-          std.join(',', slo.selectors),
         ],
-        record: 'status_class_5xx:%s:ratio_rate%s' % [slo.metric, err.labels.__tmpRate__],
+        record: 'status_class_5xx:%s' % [err.record],
         labels: labels,
       }
       for err in errorRatesWithRate
@@ -69,28 +65,24 @@ local errors = import 'errors.libsonnet';
         alert: slo.alertName,
         expr: |||
           (
-            %s{%s} > (14.4*%f)
+            %s > (14.4*%f)
             and
-            %s{%s} > (14.4*%f)
+            %s > (14.4*%f)
           )
           or
           (
-            %s{%s} > (6*%f)
+            %s > (6*%f)
             and
-            %s{%s} > (6*%f)
+            %s > (6*%f)
           )
         ||| % [
           errorPercentages[2].record,
-          std.join(',', slo.selectors),
           slo.errorBudget,
           errorPercentages[0].record,
-          std.join(',', slo.selectors),
           slo.errorBudget,
           errorPercentages[4].record,
-          std.join(',', slo.selectors),
           slo.errorBudget,
           errorPercentages[1].record,
-          std.join(',', slo.selectors),
           slo.errorBudget,
         ],
         labels: labels {

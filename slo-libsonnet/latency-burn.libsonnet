@@ -37,7 +37,7 @@ local util = import '_util.libsonnet';
           std.join(',', slo.selectors),
           rate,
         ],
-        record: 'latencytarget:%s:rate%s' % [slo.metric, rate],
+        record: 'latencytarget:%s:rate_%s' % [slo.metric, rate],
         labels: util.selectorsToLabels(rulesSelectors),
       }
       for rate in rates
