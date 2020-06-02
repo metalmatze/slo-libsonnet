@@ -23,11 +23,10 @@ local util = import '_util.libsonnet';
         slo.rate,
         slo.codeSelector,
       ],
-      record: 'rate_%s_by_%s:%s:%s' % [
+      record: 'rate_%s_by_%s:%s' % [
         slo.rate,
         slo.codeSelector,
         slo.metric,
-        std.strReplace(std.strReplace(std.strReplace(std.strReplace(std.join(':', slo.selectors), '=', ':'), '"', ''), '~', ''), '|', '-'),
       ],
     },
     recordingrule: recordingrule,

@@ -5,15 +5,15 @@ alerts:
       value: {{ $value }})'
   expr: |
     (
-      status_class_5xx:rate_1h_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp > (14.4*0.001000)
+      status_class_5xx:rate_1h_by_code:promhttp_metric_handler_requests_total > (14.4*0.001000)
       and
-      status_class_5xx:rate_5m_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp > (14.4*0.001000)
+      status_class_5xx:rate_5m_by_code:promhttp_metric_handler_requests_total > (14.4*0.001000)
     )
     or
     (
-      status_class_5xx:rate_6h_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp > (6*0.001000)
+      status_class_5xx:rate_6h_by_code:promhttp_metric_handler_requests_total > (6*0.001000)
       and
-      status_class_5xx:rate_30m_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp > (6*0.001000)
+      status_class_5xx:rate_30m_by_code:promhttp_metric_handler_requests_total > (6*0.001000)
     )
   labels:
     severity: critical
@@ -23,15 +23,15 @@ alerts:
       value: {{ $value }})'
   expr: |
     (
-      status_class_5xx:rate_1d_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp{namespace="default",job="fooapp"} > (3*0.001000)
+      status_class_5xx:rate_1d_by_code:promhttp_metric_handler_requests_total{namespace="default",job="fooapp"} > (3*0.001000)
       and
-      status_class_5xx:rate_2h_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp{namespace="default",job="fooapp"} > (3*0.001000)
+      status_class_5xx:rate_2h_by_code:promhttp_metric_handler_requests_total{namespace="default",job="fooapp"} > (3*0.001000)
     )
     or
     (
-      status_class_5xx:rate_3d_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp{namespace="default",job="fooapp"} > (0.001000)
+      status_class_5xx:rate_3d_by_code:promhttp_metric_handler_requests_total{namespace="default",job="fooapp"} > (0.001000)
       and
-      status_class_5xx:rate_6h_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp{namespace="default",job="fooapp"} > (0.001000)
+      status_class_5xx:rate_6h_by_code:promhttp_metric_handler_requests_total{namespace="default",job="fooapp"} > (0.001000)
     )
   labels:
     severity: warning
@@ -43,7 +43,7 @@ recordingrule:
       ), "status_class", "${1}xx", "code", "([0-9])..")
     )
   labels: {}
-  record: rate_5m_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp
+  record: rate_5m_by_code:promhttp_metric_handler_requests_total
 - expr: |
     sum by (status_class) (
       label_replace(
@@ -51,7 +51,7 @@ recordingrule:
       ), "status_class", "${1}xx", "code", "([0-9])..")
     )
   labels: {}
-  record: rate_30m_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp
+  record: rate_30m_by_code:promhttp_metric_handler_requests_total
 - expr: |
     sum by (status_class) (
       label_replace(
@@ -59,7 +59,7 @@ recordingrule:
       ), "status_class", "${1}xx", "code", "([0-9])..")
     )
   labels: {}
-  record: rate_1h_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp
+  record: rate_1h_by_code:promhttp_metric_handler_requests_total
 - expr: |
     sum by (status_class) (
       label_replace(
@@ -67,7 +67,7 @@ recordingrule:
       ), "status_class", "${1}xx", "code", "([0-9])..")
     )
   labels: {}
-  record: rate_2h_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp
+  record: rate_2h_by_code:promhttp_metric_handler_requests_total
 - expr: |
     sum by (status_class) (
       label_replace(
@@ -75,7 +75,7 @@ recordingrule:
       ), "status_class", "${1}xx", "code", "([0-9])..")
     )
   labels: {}
-  record: rate_6h_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp
+  record: rate_6h_by_code:promhttp_metric_handler_requests_total
 - expr: |
     sum by (status_class) (
       label_replace(
@@ -83,7 +83,7 @@ recordingrule:
       ), "status_class", "${1}xx", "code", "([0-9])..")
     )
   labels: {}
-  record: rate_1d_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp
+  record: rate_1d_by_code:promhttp_metric_handler_requests_total
 - expr: |
     sum by (status_class) (
       label_replace(
@@ -91,46 +91,46 @@ recordingrule:
       ), "status_class", "${1}xx", "code", "([0-9])..")
     )
   labels: {}
-  record: rate_3d_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp
+  record: rate_3d_by_code:promhttp_metric_handler_requests_total
 - expr: |
-    sum(rate_5m_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp{status_class="5xx"})
+    sum(rate_5m_by_code:promhttp_metric_handler_requests_total{status_class="5xx"})
     /
-    sum(rate_5m_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp)
+    sum(rate_5m_by_code:promhttp_metric_handler_requests_total)
   labels: {}
-  record: status_class_5xx:rate_5m_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp
+  record: status_class_5xx:rate_5m_by_code:promhttp_metric_handler_requests_total
 - expr: |
-    sum(rate_30m_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp{status_class="5xx"})
+    sum(rate_30m_by_code:promhttp_metric_handler_requests_total{status_class="5xx"})
     /
-    sum(rate_30m_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp)
+    sum(rate_30m_by_code:promhttp_metric_handler_requests_total)
   labels: {}
-  record: status_class_5xx:rate_30m_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp
+  record: status_class_5xx:rate_30m_by_code:promhttp_metric_handler_requests_total
 - expr: |
-    sum(rate_1h_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp{status_class="5xx"})
+    sum(rate_1h_by_code:promhttp_metric_handler_requests_total{status_class="5xx"})
     /
-    sum(rate_1h_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp)
+    sum(rate_1h_by_code:promhttp_metric_handler_requests_total)
   labels: {}
-  record: status_class_5xx:rate_1h_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp
+  record: status_class_5xx:rate_1h_by_code:promhttp_metric_handler_requests_total
 - expr: |
-    sum(rate_2h_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp{status_class="5xx"})
+    sum(rate_2h_by_code:promhttp_metric_handler_requests_total{status_class="5xx"})
     /
-    sum(rate_2h_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp)
+    sum(rate_2h_by_code:promhttp_metric_handler_requests_total)
   labels: {}
-  record: status_class_5xx:rate_2h_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp
+  record: status_class_5xx:rate_2h_by_code:promhttp_metric_handler_requests_total
 - expr: |
-    sum(rate_6h_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp{status_class="5xx"})
+    sum(rate_6h_by_code:promhttp_metric_handler_requests_total{status_class="5xx"})
     /
-    sum(rate_6h_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp)
+    sum(rate_6h_by_code:promhttp_metric_handler_requests_total)
   labels: {}
-  record: status_class_5xx:rate_6h_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp
+  record: status_class_5xx:rate_6h_by_code:promhttp_metric_handler_requests_total
 - expr: |
-    sum(rate_1d_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp{status_class="5xx"})
+    sum(rate_1d_by_code:promhttp_metric_handler_requests_total{status_class="5xx"})
     /
-    sum(rate_1d_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp)
+    sum(rate_1d_by_code:promhttp_metric_handler_requests_total)
   labels: {}
-  record: status_class_5xx:rate_1d_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp
+  record: status_class_5xx:rate_1d_by_code:promhttp_metric_handler_requests_total
 - expr: |
-    sum(rate_3d_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp{status_class="5xx"})
+    sum(rate_3d_by_code:promhttp_metric_handler_requests_total{status_class="5xx"})
     /
-    sum(rate_3d_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp)
+    sum(rate_3d_by_code:promhttp_metric_handler_requests_total)
   labels: {}
-  record: status_class_5xx:rate_3d_by_code:promhttp_metric_handler_requests_total:namespace:default:job:fooapp
+  record: status_class_5xx:rate_3d_by_code:promhttp_metric_handler_requests_total
