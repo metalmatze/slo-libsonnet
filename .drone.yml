@@ -11,5 +11,5 @@ steps:
   image: quay.io/coreos/jsonnet-ci
   commands:
   - cd examples && jb install && cd ..
-  - make examples --always-make
+  - make
   - git diff --exit-code
