@@ -37,7 +37,7 @@ local prometheus = grafana.prometheus;
   ],
 
   // Creating a new dashboard
-  dashboard:  dashboard.new(
+  dashboard: dashboard.new(
     '%s' % appname,
     time_from='now-1h',
   ).addTemplate(

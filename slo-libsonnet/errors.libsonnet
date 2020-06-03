@@ -46,7 +46,7 @@ local util = import '_util.libsonnet';
         slo.warning,
       ],
       'for': '5m',
-      labels: labels{
+      labels: labels {
         severity: 'warning',
       },
     },
@@ -64,7 +64,7 @@ local util = import '_util.libsonnet';
         slo.critical,
       ],
       'for': '5m',
-      labels: labels{
+      labels: labels {
         severity: 'critical',
       },
     },

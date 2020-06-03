@@ -1,6 +1,12 @@
 
-.PHONY: build-in-docker examples/http-request-latency-burnrate.yaml examples/http-request-error-burnrate.yaml examples/http-request-errors.yaml examples/http-request-latency.yaml
-all: examples
+.PHONY: build-in-docker jsonnetfmt examples/http-request-latency-burnrate.yaml examples/http-request-error-burnrate.yaml examples/http-request-errors.yaml examples/http-request-latency.yaml
+
+JSONNET_SRC = $(shell find . -type f -not -path './*vendor/*' \( -name '*.libsonnet' -o -name '*.jsonnet' \))
+
+all: examples jsonnetfmt
+
+jsonnetfmt: $(JSONNET_SRC)
+	jsonnetfmt -n 2 --max-blank-lines 2 --string-style s --comment-style s -i $(JSONNET_SRC)
 
 examples: examples/http-request-latency-burnrate.yaml examples/http-request-error-burnrate.yaml examples/http-request-errors.yaml examples/http-request-latency.yaml
 
