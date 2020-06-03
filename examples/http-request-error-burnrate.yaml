@@ -5,15 +5,15 @@ alerts:
       value: {{ $value }})'
   expr: |
     (
-      status_class_5xx:rate1h_by_code:promhttp_metric_handler_requests_total > (14.4*0.001000)
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate1h > (14.4*0.001000)
       and
-      status_class_5xx:rate5m_by_code:promhttp_metric_handler_requests_total > (14.4*0.001000)
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate5m > (14.4*0.001000)
     )
     or
     (
-      status_class_5xx:rate6h_by_code:promhttp_metric_handler_requests_total > (6*0.001000)
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate6h > (6*0.001000)
       and
-      status_class_5xx:rate30m_by_code:promhttp_metric_handler_requests_total > (6*0.001000)
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate30m > (6*0.001000)
     )
   labels:
     severity: critical
@@ -23,15 +23,15 @@ alerts:
       value: {{ $value }})'
   expr: |
     (
-      status_class_5xx:rate1d_by_code:promhttp_metric_handler_requests_total{namespace="default",job="fooapp"} > (3*0.001000)
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate1d{namespace="default",job="fooapp"} > (3*0.001000)
       and
-      status_class_5xx:rate2h_by_code:promhttp_metric_handler_requests_total{namespace="default",job="fooapp"} > (3*0.001000)
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate2h{namespace="default",job="fooapp"} > (3*0.001000)
     )
     or
     (
-      status_class_5xx:rate3d_by_code:promhttp_metric_handler_requests_total{namespace="default",job="fooapp"} > (0.001000)
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate3d{namespace="default",job="fooapp"} > (0.001000)
       and
-      status_class_5xx:rate6h_by_code:promhttp_metric_handler_requests_total{namespace="default",job="fooapp"} > (0.001000)
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate6h{namespace="default",job="fooapp"} > (0.001000)
     )
   labels:
     severity: warning
@@ -43,7 +43,7 @@ recordingrule:
       ), "status_class", "${1}xx", "code", "([0-9])..")
     )
   labels: {}
-  record: rate5m_by_code:promhttp_metric_handler_requests_total
+  record: promhttp_metric_handler_requests_total:ratio_rate5m
 - expr: |
     sum by (status_class) (
       label_replace(
@@ -51,7 +51,7 @@ recordingrule:
       ), "status_class", "${1}xx", "code", "([0-9])..")
     )
   labels: {}
-  record: rate30m_by_code:promhttp_metric_handler_requests_total
+  record: promhttp_metric_handler_requests_total:ratio_rate30m
 - expr: |
     sum by (status_class) (
       label_replace(
@@ -59,7 +59,7 @@ recordingrule:
       ), "status_class", "${1}xx", "code", "([0-9])..")
     )
   labels: {}
-  record: rate1h_by_code:promhttp_metric_handler_requests_total
+  record: promhttp_metric_handler_requests_total:ratio_rate1h
 - expr: |
     sum by (status_class) (
       label_replace(
@@ -67,7 +67,7 @@ recordingrule:
       ), "status_class", "${1}xx", "code", "([0-9])..")
     )
   labels: {}
-  record: rate2h_by_code:promhttp_metric_handler_requests_total
+  record: promhttp_metric_handler_requests_total:ratio_rate2h
 - expr: |
     sum by (status_class) (
       label_replace(
@@ -75,7 +75,7 @@ recordingrule:
       ), "status_class", "${1}xx", "code", "([0-9])..")
     )
   labels: {}
-  record: rate6h_by_code:promhttp_metric_handler_requests_total
+  record: promhttp_metric_handler_requests_total:ratio_rate6h
 - expr: |
     sum by (status_class) (
       label_replace(
@@ -83,7 +83,7 @@ recordingrule:
       ), "status_class", "${1}xx", "code", "([0-9])..")
     )
   labels: {}
-  record: rate1d_by_code:promhttp_metric_handler_requests_total
+  record: promhttp_metric_handler_requests_total:ratio_rate1d
 - expr: |
     sum by (status_class) (
       label_replace(
@@ -91,46 +91,46 @@ recordingrule:
       ), "status_class", "${1}xx", "code", "([0-9])..")
     )
   labels: {}
-  record: rate3d_by_code:promhttp_metric_handler_requests_total
+  record: promhttp_metric_handler_requests_total:ratio_rate3d
 - expr: |
-    sum(rate5m_by_code:promhttp_metric_handler_requests_total{status_class="5xx"})
+    sum(promhttp_metric_handler_requests_total:ratio_rate5m{status_class="5xx"})
     /
-    sum(rate5m_by_code:promhttp_metric_handler_requests_total)
+    sum(promhttp_metric_handler_requests_total:ratio_rate5m)
   labels: {}
-  record: status_class_5xx:rate5m_by_code:promhttp_metric_handler_requests_total
+  record: status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate5m
 - expr: |
-    sum(rate30m_by_code:promhttp_metric_handler_requests_total{status_class="5xx"})
+    sum(promhttp_metric_handler_requests_total:ratio_rate30m{status_class="5xx"})
     /
-    sum(rate30m_by_code:promhttp_metric_handler_requests_total)
+    sum(promhttp_metric_handler_requests_total:ratio_rate30m)
   labels: {}
-  record: status_class_5xx:rate30m_by_code:promhttp_metric_handler_requests_total
+  record: status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate30m
 - expr: |
-    sum(rate1h_by_code:promhttp_metric_handler_requests_total{status_class="5xx"})
+    sum(promhttp_metric_handler_requests_total:ratio_rate1h{status_class="5xx"})
     /
-    sum(rate1h_by_code:promhttp_metric_handler_requests_total)
+    sum(promhttp_metric_handler_requests_total:ratio_rate1h)
   labels: {}
-  record: status_class_5xx:rate1h_by_code:promhttp_metric_handler_requests_total
+  record: status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate1h
 - expr: |
-    sum(rate2h_by_code:promhttp_metric_handler_requests_total{status_class="5xx"})
+    sum(promhttp_metric_handler_requests_total:ratio_rate2h{status_class="5xx"})
     /
-    sum(rate2h_by_code:promhttp_metric_handler_requests_total)
+    sum(promhttp_metric_handler_requests_total:ratio_rate2h)
   labels: {}
-  record: status_class_5xx:rate2h_by_code:promhttp_metric_handler_requests_total
+  record: status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate2h
 - expr: |
-    sum(rate6h_by_code:promhttp_metric_handler_requests_total{status_class="5xx"})
+    sum(promhttp_metric_handler_requests_total:ratio_rate6h{status_class="5xx"})
     /
-    sum(rate6h_by_code:promhttp_metric_handler_requests_total)
+    sum(promhttp_metric_handler_requests_total:ratio_rate6h)
   labels: {}
-  record: status_class_5xx:rate6h_by_code:promhttp_metric_handler_requests_total
+  record: status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate6h
 - expr: |
-    sum(rate1d_by_code:promhttp_metric_handler_requests_total{status_class="5xx"})
+    sum(promhttp_metric_handler_requests_total:ratio_rate1d{status_class="5xx"})
     /
-    sum(rate1d_by_code:promhttp_metric_handler_requests_total)
+    sum(promhttp_metric_handler_requests_total:ratio_rate1d)
   labels: {}
-  record: status_class_5xx:rate1d_by_code:promhttp_metric_handler_requests_total
+  record: status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate1d
 - expr: |
-    sum(rate3d_by_code:promhttp_metric_handler_requests_total{status_class="5xx"})
+    sum(promhttp_metric_handler_requests_total:ratio_rate3d{status_class="5xx"})
     /
-    sum(rate3d_by_code:promhttp_metric_handler_requests_total)
+    sum(promhttp_metric_handler_requests_total:ratio_rate3d)
   labels: {}
-  record: status_class_5xx:rate3d_by_code:promhttp_metric_handler_requests_total
+  record: status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate3d

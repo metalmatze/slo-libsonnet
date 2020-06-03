@@ -25,10 +25,9 @@ local util = import '_util.libsonnet';
         slo.rate,
         slo.codeSelector,
       ],
-      record: 'rate%s_by_%s:%s' % [
-        slo.rate,
-        slo.codeSelector,
+      record: '%s:ratio_rate%s' % [
         slo.metric,
+        slo.rate,
       ],
     },
     recordingrule: recordingrule,
