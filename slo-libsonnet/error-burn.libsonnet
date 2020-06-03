@@ -96,28 +96,24 @@ local errors = import 'errors.libsonnet';
         alert: slo.alertName,
         expr: |||
           (
-            %s{%s} > (3*%f)
+            %s > (3*%f)
             and
-            %s{%s} > (3*%f)
+            %s > (3*%f)
           )
           or
           (
-            %s{%s} > (%f)
+            %s > (%f)
             and
-            %s{%s} > (%f)
+            %s > (%f)
           )
         ||| % [
           errorPercentages[5].record,
-          std.join(',', slo.selectors),
           slo.errorBudget,
           errorPercentages[3].record,
-          std.join(',', slo.selectors),
           slo.errorBudget,
           errorPercentages[6].record,
-          std.join(',', slo.selectors),
           slo.errorBudget,
           errorPercentages[4].record,
-          std.join(',', slo.selectors),
           slo.errorBudget,
         ],
         labels: labels {

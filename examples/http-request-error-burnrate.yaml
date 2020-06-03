@@ -23,15 +23,15 @@ alerts:
       value: {{ $value }})'
   expr: |
     (
-      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate1d{namespace="default",job="fooapp"} > (3*0.001000)
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate1d > (3*0.001000)
       and
-      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate2h{namespace="default",job="fooapp"} > (3*0.001000)
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate2h > (3*0.001000)
     )
     or
     (
-      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate3d{namespace="default",job="fooapp"} > (0.001000)
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate3d > (0.001000)
       and
-      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate6h{namespace="default",job="fooapp"} > (0.001000)
+      status_class_5xx:promhttp_metric_handler_requests_total:ratio_rate6h > (0.001000)
     )
   labels:
     severity: warning
