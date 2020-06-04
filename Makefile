@@ -1,4 +1,9 @@
-all: examples
+all: jsonnetfmt examples
+
+JSONNET_FILES = $(shell find . -type f -not -path './examples/vendor/*' -name '*.libsonnet' -o -name '*.jsonnet')
+
+jsonnetfmt: $(JSONNET_FILES)
+	.bingo/jsonnetfmt -n 2 --max-blank-lines 2 --string-style s --comment-style s -i $(JSONNET_FILES)
 
 examples: examples/vendor examples/http-request-latency-burnrate.yaml examples/http-request-error-burnrate.yaml examples/http-request-errors.yaml examples/http-request-latency.yaml
 
@@ -6,19 +11,15 @@ examples/vendor: examples/jsonnetfile.json examples/jsonnetfile.lock.json .bingo
 	cd examples && ../.bingo/jb install
 
 examples/http-request-error-burnrate.yaml: examples/http-request-error-burnrate.jsonnet .bingo/jsonnetfmt .bingo/jsonnet .bingo/gojsontoyaml
-	.bingo/jsonnetfmt -i examples/http-request-error-burnrate.jsonnet
 	.bingo/jsonnet -J examples/vendor examples/http-request-error-burnrate.jsonnet | .bingo/gojsontoyaml > examples/http-request-error-burnrate.yaml
 
 examples/http-request-errors.yaml: examples/http-request-errors.jsonnet .bingo/jsonnetfmt .bingo/jsonnet .bingo/gojsontoyaml
-	.bingo/jsonnetfmt -i examples/http-request-errors.jsonnet
 	.bingo/jsonnet -J examples/vendor examples/http-request-errors.jsonnet | .bingo/gojsontoyaml > examples/http-request-errors.yaml
 
 examples/http-request-latency-burnrate.yaml: examples/http-request-latency-burnrate.jsonnet .bingo/jsonnetfmt .bingo/jsonnet .bingo/gojsontoyaml
-	.bingo/jsonnetfmt -i examples/http-request-latency-burnrate.jsonnet
 	.bingo/jsonnet -J examples/vendor examples/http-request-latency-burnrate.jsonnet | .bingo/gojsontoyaml > examples/http-request-latency-burnrate.yaml
 
 examples/http-request-latency.yaml: examples/http-request-latency.jsonnet .bingo/jsonnetfmt .bingo/jsonnet .bingo/gojsontoyaml
-	.bingo/jsonnetfmt -i examples/http-request-latency.jsonnet
 	.bingo/jsonnet -J examples/vendor examples/http-request-latency.jsonnet | .bingo/gojsontoyaml > examples/http-request-latency.yaml
 
 .bingo/jb:

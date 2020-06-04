@@ -7,8 +7,7 @@ local slo = import '../slo-libsonnet/slo.libsonnet';
     // However, it is availabe on every Prometheus by default.
     metric: 'promhttp_metric_handler_requests_total',
     selectors: ['namespace="default"', 'job="fooapp"'],
-
-    errorBudget: 1 - 0.999,
+    target: 0.999,  // 99.9%
   }),
 
   // Output these as example
