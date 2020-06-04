@@ -1,8 +1,7 @@
 alerts:
 - alert: LatencyBudgetBurn
   annotations:
-    message: 'High requests latency budget burn for namespace=default,job=fooapp,latency=1
-      (current value: {{ $value }})'
+    message: 'High requests latency budget burn for namespace=default,job=fooapp,latency=1 (current value: {{ $value }})'
   expr: |
     (
       latencytarget:http_request_duration_seconds:rate1h{namespace="default",job="fooapp",latency="1"} > (14.4*0.010000)
@@ -22,8 +21,7 @@ alerts:
     severity: critical
 - alert: LatencyBudgetBurn
   annotations:
-    message: 'High requests latency budget burn for namespace=default,job=fooapp,latency=1
-      (current value: {{ $value }})'
+    message: 'High requests latency budget burn for namespace=default,job=fooapp,latency=1 (current value: {{ $value }})'
   expr: |
     (
       latencytarget:http_request_duration_seconds:rate1d{namespace="default",job="fooapp",latency="1"} > (3*0.010000)
