@@ -1,6 +1,11 @@
 all: examples
 
-examples: examples/vendor examples/http-request-latency-burnrate.yaml examples/http-request-error-burnrate.yaml examples/http-request-errors.yaml examples/http-request-latency.yaml
+examples: \
+	examples/http-request-error-burnrate.yaml \
+	examples/http-request-errorlatency-burnrate.yaml \
+	examples/http-request-errors.yaml \
+	examples/http-request-latency-burnrate.yaml \
+	examples/http-request-latency.yaml
 
 examples/vendor: examples/jsonnetfile.json examples/jsonnetfile.lock.json .bingo/jb
 	cd examples && ../.bingo/jb install
@@ -8,6 +13,10 @@ examples/vendor: examples/jsonnetfile.json examples/jsonnetfile.lock.json .bingo
 examples/http-request-error-burnrate.yaml: examples/http-request-error-burnrate.jsonnet .bingo/jsonnetfmt .bingo/jsonnet .bingo/gojsontoyaml
 	.bingo/jsonnetfmt -i examples/http-request-error-burnrate.jsonnet
 	.bingo/jsonnet -J examples/vendor examples/http-request-error-burnrate.jsonnet | .bingo/gojsontoyaml > examples/http-request-error-burnrate.yaml
+
+examples/http-request-errorlatency-burnrate.yaml: examples/http-request-errorlatency-burnrate.jsonnet .bingo/jsonnetfmt .bingo/jsonnet .bingo/gojsontoyaml
+	.bingo/jsonnetfmt -i examples/http-request-errorlatency-burnrate.jsonnet
+	.bingo/jsonnet -J examples/vendor examples/http-request-errorlatency-burnrate.jsonnet | .bingo/gojsontoyaml > examples/http-request-errorlatency-burnrate.yaml
 
 examples/http-request-errors.yaml: examples/http-request-errors.jsonnet .bingo/jsonnetfmt .bingo/jsonnet .bingo/gojsontoyaml
 	.bingo/jsonnetfmt -i examples/http-request-errors.jsonnet
