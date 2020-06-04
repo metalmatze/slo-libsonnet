@@ -10,5 +10,6 @@ steps:
   pull: always
   image: golang:1.14-alpine
   commands:
+  - apk add git make
   - make examples --always-make
   - git diff --exit-code
