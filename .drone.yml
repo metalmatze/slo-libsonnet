@@ -8,8 +8,8 @@ platform:
 steps:
 - name: test
   pull: always
-  image: quay.io/coreos/jsonnet-ci
+  image: golang:1.14-alpine
   commands:
-  - cd examples && jb install && cd ..
+  - apk add git make
   - make examples --always-make
   - git diff --exit-code
