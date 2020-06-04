@@ -1,5 +1,8 @@
 all: examples
 
+README.md: .bingo/embedmd $(shell find examples -name '*.jsonnet')
+	.bingo/embedmd -w README.md
+
 examples: examples/vendor examples/http-request-latency-burnrate.yaml examples/http-request-error-burnrate.yaml examples/http-request-errors.yaml examples/http-request-latency.yaml
 
 examples/vendor: examples/jsonnetfile.json examples/jsonnetfile.lock.json .bingo/jb
@@ -20,6 +23,9 @@ examples/http-request-latency-burnrate.yaml: examples/http-request-latency-burnr
 examples/http-request-latency.yaml: examples/http-request-latency.jsonnet .bingo/jsonnetfmt .bingo/jsonnet .bingo/gojsontoyaml
 	.bingo/jsonnetfmt -i examples/http-request-latency.jsonnet
 	.bingo/jsonnet -J examples/vendor examples/http-request-latency.jsonnet | .bingo/gojsontoyaml > examples/http-request-latency.yaml
+
+.bingo/embedmd:
+	go build -modfile .bingo/embedmd.mod -o .bingo/embedmd github.com/campoy/embedmd
 
 .bingo/jb:
 	go build -modfile .bingo/jb.mod -o .bingo/jb github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb
