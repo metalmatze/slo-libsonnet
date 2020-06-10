@@ -4,85 +4,42 @@ local util = import '_util.libsonnet';
   errors(param):: {
     local slo = {
       metric: error 'must set metric for errors',
-      selectors: error 'must set selectors for errors',
-      labels: [],
+      selectors: [],
+      errorSelectors: ['code=~"5.."'],
       rate: '5m',
-      codeSelector: 'code',
     } + param,
 
-    local labels =
-      util.selectorsToLabels(slo.selectors) +
-      util.selectorsToLabels(slo.labels),
+    local labels = util.selectorsToLabels(slo.selectors),
 
-    local recordingrule = {
-      expr: |||
-        sum by (status_class) (
-          label_replace(
-            rate(%s{%s}[%s]
-          ), "status_class", "${1}xx", "%s", "([0-9])..")
-        )
-      ||| % [
-        slo.metric,
-        std.join(',', slo.selectors),
-        slo.rate,
-        slo.codeSelector,
-      ],
-      record: 'status_class:%s:rate%s' % [
-        slo.metric,
-        slo.rate,
-      ],
-      labels: labels,
-    },
-    recordingrule: recordingrule,
-
-    alertWarning: {
-      expr: |||
-        (
-          sum(%s{status_class="5xx"})
-        /
-          sum(%s)
-        ) > %s
-      ||| % [
-        recordingrule.record,
-        recordingrule.record,
-        slo.warning,
-      ],
-      'for': '5m',
-      labels: labels {
-        severity: 'warning',
-      },
-    },
-
-    alertCritical: {
-      expr: |||
-        (
-          sum(%s{status_class="5xx"})
-        /
-          sum(%s)
-        ) > %s
-      ||| % [
-        recordingrule.record,
-        recordingrule.record,
-        slo.critical,
-      ],
-      'for': '5m',
-      labels: labels {
-        severity: 'critical',
-      },
-    },
+    alerts: [
+      {
+        expr: |||
+          (
+            sum(rate(%(metric)s{%(errorSelectors)s}[%(rate)s]))
+            /
+            sum(rate(%(metric)s{%(selectors)s}[%(rate)s]))
+          )
+          > %(severity)f
+        ||| % {
+          metric: slo.metric,
+          selectors: std.join(',', slo.selectors),
+          errorSelectors: std.join(',', slo.selectors + slo.errorSelectors),
+          rate: slo.rate,
+          severity: severity.percent,
+        },
+        'for': '5m',
+        labels: labels {
+          severity: severity.name,
+        },
+      }
+      for severity in [
+        { name: 'warning', percent: slo.warning },
+        { name: 'critical', percent: slo.critical },
+      ]
+    ],
 
     grafana: {
       graph: {
-        span: 12,
-        aliasColors: {
-          '1xx': '#EAB839',
-          '2xx': '#7EB26D',
-          '3xx': '#6ED0E0',
-          '4xx': '#EF843C',
-          '5xx': '#E24D42',
-          success: '#7EB26D',
-          'error': '#E24D42',
-        },
         datasource: '$datasource',
         legend: {
           avg: false,
@@ -95,12 +52,30 @@ local util = import '_util.libsonnet';
         },
         targets: [
           {
-            expr: '%s' % recordingrule.record,
+            expr: '%s{%s}' % [slo.metric, labels],
             format: 'time_series',
             intervalFactor: 2,
-            legendFormat: '{{status_class}}',
+            legendFormat: '{{code}}',
             refId: 'A',
             step: 10,
+          },
+        ],
+        seriesOverrides: [
+          {
+            alias: '/2../',
+            color: '#56A64B',
+          },
+          {
+            alias: '/3../',
+            color: '#F2CC0C',
+          },
+          {
+            alias: '/4../',
+            color: '#3274D9',
+          },
+          {
+            alias: '/5../',
+            color: '#E02F44',
           },
         ],
         title: 'HTTP Response Codes',

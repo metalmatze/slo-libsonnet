@@ -1,10 +1,11 @@
 alerts:
 - expr: |
     (
-      sum(status_class:promhttp_metric_handler_requests_total:rate5m{status_class="5xx"})
-    /
-      sum(status_class:promhttp_metric_handler_requests_total:rate5m)
-    ) > 0.050000000000000003
+      sum(rate(promhttp_metric_handler_requests_total{namespace="default",job="fooapp",code=~"5.."}[5m]))
+      /
+      sum(rate(promhttp_metric_handler_requests_total{namespace="default",job="fooapp"}[5m]))
+    )
+    > 0.050000
   for: 5m
   labels:
     job: fooapp
@@ -12,25 +13,15 @@ alerts:
     severity: warning
 - expr: |
     (
-      sum(status_class:promhttp_metric_handler_requests_total:rate5m{status_class="5xx"})
-    /
-      sum(status_class:promhttp_metric_handler_requests_total:rate5m)
-    ) > 0.10000000000000001
+      sum(rate(promhttp_metric_handler_requests_total{namespace="default",job="fooapp",code=~"5.."}[5m]))
+      /
+      sum(rate(promhttp_metric_handler_requests_total{namespace="default",job="fooapp"}[5m]))
+    )
+    > 0.100000
   for: 5m
   labels:
     job: fooapp
     namespace: default
     severity: critical
 grafana:
-  graph: '{"aliasColors": {"1xx": "#EAB839", "2xx": "#7EB26D", "3xx": "#6ED0E0", "4xx": "#EF843C", "5xx": "#E24D42", "error": "#E24D42", "success": "#7EB26D"}, "datasource": "$datasource", "legend": {"avg": false, "current": false, "max": false, "min": false, "show": true, "total": false, "values": false}, "span": 12, "targets": [{"expr": "status_class:promhttp_metric_handler_requests_total:rate5m", "format": "time_series", "intervalFactor": 2, "legendFormat": "{{status_class}}", "refId": "A", "step": 10}], "title": "HTTP Response Codes", "tooltip": {"shared": true, "sort": 0, "value_type": "individual"}, "type": "graph"}'
-recordingrule:
-  expr: |
-    sum by (status_class) (
-      label_replace(
-        rate(promhttp_metric_handler_requests_total{namespace="default",job="fooapp"}[5m]
-      ), "status_class", "${1}xx", "code", "([0-9])..")
-    )
-  labels:
-    job: fooapp
-    namespace: default
-  record: status_class:promhttp_metric_handler_requests_total:rate5m
+  graph: '{"datasource": "$datasource", "legend": {"avg": false, "current": false, "max": false, "min": false, "show": true, "total": false, "values": false}, "seriesOverrides": [{"alias": "/2../", "color": "#56A64B"}, {"alias": "/3../", "color": "#F2CC0C"}, {"alias": "/4../", "color": "#3274D9"}, {"alias": "/5../", "color": "#E02F44"}], "targets": [{"expr": "promhttp_metric_handler_requests_total{{\"job\": \"fooapp\", \"namespace\": \"default\"}}", "format": "time_series", "intervalFactor": 2, "legendFormat": "{{code}}", "refId": "A", "step": 10}], "title": "HTTP Response Codes", "tooltip": {"shared": true, "sort": 0, "value_type": "individual"}, "type": "graph"}'
