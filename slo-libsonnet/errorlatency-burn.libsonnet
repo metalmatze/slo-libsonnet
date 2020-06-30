@@ -5,8 +5,8 @@ local util = import '_util.libsonnet';
     local slo = {
       alertName: 'ErrorBudgetBurn',
       alertMessage: 'App is burning too much error budget',
-      metric: error 'must set metric for error burn', // This has to be a histogram metric without _bucket or _count
-      recordingrule: '%s:burnrate%%s' % self.metric, // double %% at the end as we template again further on
+      metric: error 'must set metric for error burn',  // This has to be a histogram metric without _bucket or _count
+      recordingrule: '%s:burnrate%%s' % self.metric,  // double %% at the end as we template again further on
       selectors: error 'must set selectors for error burn',
       target: error 'must set target for error burn',
       labels: [],
@@ -42,6 +42,7 @@ local util = import '_util.libsonnet';
             /
             sum(rate(%(metric)s_count{%(selectors)s}[%(rate)s]))
           ||| % { selectors: std.join(',', slo.selectors), codeSelector: slo.codeSelector, metric: slo.metric, rate: rate },
+          labels: labels,
         }
         for rate in std.set([  // Get the unique array of short and long window rates
           r.short
@@ -68,7 +69,7 @@ local util = import '_util.libsonnet';
             w.factor,
             (1 - slo.target),
           ],
-          labels: {
+          labels: labels {
             severity: w.severity,
           },
           annotations: {
