@@ -2,7 +2,7 @@ all: jsonnetfmt examples
 
 JSONNET_FILES = $(shell find . -type f -not -path './examples/vendor/*' -name '*.libsonnet' -o -name '*.jsonnet')
 
-jsonnetfmt: $(JSONNET_FILES)
+jsonnetfmt: .bingo/jsonnetfmt $(JSONNET_FILES)
 	.bingo/jsonnetfmt -n 2 --max-blank-lines 2 --string-style s --comment-style s -i $(JSONNET_FILES)
 
 examples: examples/vendor examples/http-request-latency-burnrate.yaml examples/http-request-error-burnrate.yaml examples/http-request-errors.yaml examples/http-request-latency.yaml
