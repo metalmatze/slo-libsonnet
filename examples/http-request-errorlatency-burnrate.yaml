@@ -1,0 +1,176 @@
+alerts:
+- alert: ErrorBudgetBurn
+  annotations:
+    message: App is burning too much error budget
+  expr: |
+    sum(http_request_duration_seconds:burnrate1h) > (14.40 * 0.00100)
+    and
+    sum(http_request_duration_seconds:burnrate5m) > (14.40 * 0.00100)
+  for: 2m
+  labels:
+    job: fooapp
+    namespace: default
+    severity: critical
+- alert: ErrorBudgetBurn
+  annotations:
+    message: App is burning too much error budget
+  expr: |
+    sum(http_request_duration_seconds:burnrate6h) > (6.00 * 0.00100)
+    and
+    sum(http_request_duration_seconds:burnrate30m) > (6.00 * 0.00100)
+  for: 15m
+  labels:
+    job: fooapp
+    namespace: default
+    severity: critical
+- alert: ErrorBudgetBurn
+  annotations:
+    message: App is burning too much error budget
+  expr: |
+    sum(http_request_duration_seconds:burnrate1d) > (3.00 * 0.00100)
+    and
+    sum(http_request_duration_seconds:burnrate2h) > (3.00 * 0.00100)
+  for: 1h
+  labels:
+    job: fooapp
+    namespace: default
+    severity: warning
+- alert: ErrorBudgetBurn
+  annotations:
+    message: App is burning too much error budget
+  expr: |
+    sum(http_request_duration_seconds:burnrate3d) > (1.00 * 0.00100)
+    and
+    sum(http_request_duration_seconds:burnrate6h) > (1.00 * 0.00100)
+  for: 3h
+  labels:
+    job: fooapp
+    namespace: default
+    severity: warning
+recordingrule:
+- expr: |
+    (
+      (
+        # sum of too slow requests
+        sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp",code!~"5.."}[1d]))
+        -
+        sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",code!~"5..",le="1"}[1d]))
+      )
+      +
+      # sum of errors
+      sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp",code=~"5.."}[1d]))
+    )
+    /
+    sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp"}[1d]))
+  labels:
+    job: fooapp
+    namespace: default
+  record: http_request_duration_seconds:burnrate1d
+- expr: |
+    (
+      (
+        # sum of too slow requests
+        sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp",code!~"5.."}[1h]))
+        -
+        sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",code!~"5..",le="1"}[1h]))
+      )
+      +
+      # sum of errors
+      sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp",code=~"5.."}[1h]))
+    )
+    /
+    sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp"}[1h]))
+  labels:
+    job: fooapp
+    namespace: default
+  record: http_request_duration_seconds:burnrate1h
+- expr: |
+    (
+      (
+        # sum of too slow requests
+        sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp",code!~"5.."}[2h]))
+        -
+        sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",code!~"5..",le="1"}[2h]))
+      )
+      +
+      # sum of errors
+      sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp",code=~"5.."}[2h]))
+    )
+    /
+    sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp"}[2h]))
+  labels:
+    job: fooapp
+    namespace: default
+  record: http_request_duration_seconds:burnrate2h
+- expr: |
+    (
+      (
+        # sum of too slow requests
+        sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp",code!~"5.."}[30m]))
+        -
+        sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",code!~"5..",le="1"}[30m]))
+      )
+      +
+      # sum of errors
+      sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp",code=~"5.."}[30m]))
+    )
+    /
+    sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp"}[30m]))
+  labels:
+    job: fooapp
+    namespace: default
+  record: http_request_duration_seconds:burnrate30m
+- expr: |
+    (
+      (
+        # sum of too slow requests
+        sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp",code!~"5.."}[3d]))
+        -
+        sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",code!~"5..",le="1"}[3d]))
+      )
+      +
+      # sum of errors
+      sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp",code=~"5.."}[3d]))
+    )
+    /
+    sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp"}[3d]))
+  labels:
+    job: fooapp
+    namespace: default
+  record: http_request_duration_seconds:burnrate3d
+- expr: |
+    (
+      (
+        # sum of too slow requests
+        sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp",code!~"5.."}[5m]))
+        -
+        sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",code!~"5..",le="1"}[5m]))
+      )
+      +
+      # sum of errors
+      sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp",code=~"5.."}[5m]))
+    )
+    /
+    sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp"}[5m]))
+  labels:
+    job: fooapp
+    namespace: default
+  record: http_request_duration_seconds:burnrate5m
+- expr: |
+    (
+      (
+        # sum of too slow requests
+        sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp",code!~"5.."}[6h]))
+        -
+        sum(rate(http_request_duration_seconds_bucket{namespace="default",job="fooapp",code!~"5..",le="1"}[6h]))
+      )
+      +
+      # sum of errors
+      sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp",code=~"5.."}[6h]))
+    )
+    /
+    sum(rate(http_request_duration_seconds_count{namespace="default",job="fooapp"}[6h]))
+  labels:
+    job: fooapp
+    namespace: default
+  record: http_request_duration_seconds:burnrate6h
