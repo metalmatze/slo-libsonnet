@@ -24,20 +24,18 @@ local util = import '_util.libsonnet';
         // This gives the total requests that fail the SLO
         expr: |||
           1 - (
-            sum(rate(%s{%s,le="%s",%s}[%s]))
+            sum(rate(%(bucketMetric)s{%(selectors)s,le="%(latencyTarget)s",%(notErrorSelector)s}[%(rate)s]))
             /
-            sum(rate(%s{%s}[%s]))
+            sum(rate(%(countMetric)s{%(selectors)s}[%(rate)s]))
           )
-        ||| % [
-          slo.metric + '_bucket',
-          std.join(',', slo.selectors),
-          slo.latencyTarget,
-          slo.notErrorSelector,
-          rate,
-          slo.metric + '_count',
-          std.join(',', slo.selectors),
-          rate,
-        ],
+        ||| % {
+          bucketMetric: slo.metric + '_bucket',
+          selectors: std.join(',', slo.selectors),
+          latencyTarget: slo.latencyTarget,
+          notErrorSelector: slo.notErrorSelector,
+          rate: rate,
+          countMetric: slo.metric + '_count',
+        },
         record: 'latencytarget:%s:rate%s' % [slo.metric, rate],
         labels: util.selectorsToLabels(rulesSelectors),
       }
