@@ -5,6 +5,9 @@ local util = import '_util.libsonnet';
       alertName: 'LatencyBudgetBurn',
       metric: error 'must set metric for latency burn',
       selectors: error 'must set selectors for latency burn',
+
+      // Note, the latency target must be available as an exact histogram
+      // bucket. As recording rules rely on it.
       latencyTarget: error 'must set latencyTarget latency burn',
       latencyBudget: error 'must set latencyBudget latency burn',
       labels: [],
