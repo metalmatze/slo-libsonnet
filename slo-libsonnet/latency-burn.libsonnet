@@ -9,6 +9,7 @@ local util = import '_util.libsonnet';
       latencyBudget: error 'must set latencyBudget latency burn',
       labels: [],
       codeSelector: 'code',
+      notErrorSelector: '%s!~"5.."' % slo.codeSelector,
     } + param,
 
     local rates = ['5m', '30m', '1h', '2h', '6h', '1d', '3d'],
@@ -23,7 +24,7 @@ local util = import '_util.libsonnet';
         // This gives the total requests that fail the SLO
         expr: |||
           1 - (
-            sum(rate(%s{%s,le="%s",%s!~"5.."}[%s]))
+            sum(rate(%s{%s,le="%s",%s}[%s]))
             /
             sum(rate(%s{%s}[%s]))
           )
@@ -31,7 +32,7 @@ local util = import '_util.libsonnet';
           slo.metric + '_bucket',
           std.join(',', slo.selectors),
           slo.latencyTarget,
-          slo.codeSelector,
+          slo.notErrorSelector,
           rate,
           slo.metric + '_count',
           std.join(',', slo.selectors),
