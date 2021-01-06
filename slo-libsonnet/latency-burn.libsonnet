@@ -5,10 +5,14 @@ local util = import '_util.libsonnet';
       alertName: 'LatencyBudgetBurn',
       metric: error 'must set metric for latency burn',
       selectors: error 'must set selectors for latency burn',
+
+      // Note, the latency target must be available as an exact histogram
+      // bucket. As recording rules rely on it.
       latencyTarget: error 'must set latencyTarget latency burn',
       latencyBudget: error 'must set latencyBudget latency burn',
       labels: [],
       codeSelector: 'code',
+      notErrorSelector: '%s!~"5.."' % slo.codeSelector,
     } + param,
 
     local rates = ['5m', '30m', '1h', '2h', '6h', '1d', '3d'],
@@ -23,20 +27,18 @@ local util = import '_util.libsonnet';
         // This gives the total requests that fail the SLO
         expr: |||
           1 - (
-            sum(rate(%s{%s,le="%s",%s!~"5.."}[%s]))
+            sum(rate(%(bucketMetric)s{%(selectors)s,le="%(latencyTarget)s",%(notErrorSelector)s}[%(rate)s]))
             /
-            sum(rate(%s{%s}[%s]))
+            sum(rate(%(countMetric)s{%(selectors)s}[%(rate)s]))
           )
-        ||| % [
-          slo.metric + '_bucket',
-          std.join(',', slo.selectors),
-          slo.latencyTarget,
-          slo.codeSelector,
-          rate,
-          slo.metric + '_count',
-          std.join(',', slo.selectors),
-          rate,
-        ],
+        ||| % {
+          bucketMetric: slo.metric + '_bucket',
+          selectors: std.join(',', slo.selectors),
+          latencyTarget: slo.latencyTarget,
+          notErrorSelector: slo.notErrorSelector,
+          rate: rate,
+          countMetric: slo.metric + '_count',
+        },
         record: 'latencytarget:%s:rate%s' % [slo.metric, rate],
         labels: util.selectorsToLabels(rulesSelectors),
       }
