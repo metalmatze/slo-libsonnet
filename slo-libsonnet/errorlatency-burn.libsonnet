@@ -5,6 +5,8 @@ local util = import '_util.libsonnet';
     local slo = {
       alertName: 'ErrorBudgetBurn',
       alertMessage: 'App is burning too much error budget',
+      alertLabels: {},
+      alertAnnotations: {},
       metric: error 'must set metric for error burn',  // This has to be a histogram metric without _bucket or _count
       recordingrule: '%s:burnrate%%s' % self.metric,  // double %% at the end as we template again further on
       selectors: error 'must set selectors for error burn',
@@ -71,10 +73,10 @@ local util = import '_util.libsonnet';
           ],
           labels: labels {
             severity: w.severity,
-          },
+          } + slo.alertLabels,
           annotations: {
             message: slo.alertMessage,
-          },
+          } + slo.alertAnnotations,
           'for': '%(for)s' % w,
         }
         for w in slo.windows

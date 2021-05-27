@@ -4,6 +4,8 @@ local util = import '_util.libsonnet';
   errors(param):: {
     local slo = {
       metric: error 'must set metric for errors',
+      alertLabels: {},
+      alertAnnotations: {},
       selectors: [],
       errorSelectors: ['code=~"5.."'],
       rate: '5m',
@@ -30,7 +32,8 @@ local util = import '_util.libsonnet';
         'for': '5m',
         labels: labels {
           severity: severity.name,
-        },
+        } + slo.alertLabels,
+        annotations: slo.alertAnnotations,
       }
       for severity in [
         { name: 'warning', percent: slo.warning },
