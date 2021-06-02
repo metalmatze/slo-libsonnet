@@ -1,12 +1,14 @@
 alerts:
-- expr: |
+- annotations: {}
+  expr: |
     prometheus_http_request_duration_seconds:histogram_quantile > 0.500
   for: 5m
   labels:
     job: fooapp
     namespace: default
     severity: warning
-- expr: |
+- annotations: {}
+  expr: |
     prometheus_http_request_duration_seconds:histogram_quantile > 1.000
   for: 5m
   labels:
