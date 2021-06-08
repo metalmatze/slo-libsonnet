@@ -18,6 +18,7 @@ local util = import '_util.libsonnet';
     local rates = ['5m', '30m', '1h', '2h', '6h', '1d', '3d'],
 
     local rulesSelectors = slo.selectors + ['latency="' + slo.latencyTarget + '"'],
+    local alertSelectors = std.strReplace(std.join(',', rulesSelectors), '=~', '='),
 
     local latencyRules = [
       {
@@ -66,16 +67,16 @@ local util = import '_util.libsonnet';
           )
         ||| % [
           latencyRules[2].record,
-          std.join(',', rulesSelectors),
+          alertSelectors,
           slo.latencyBudget,
           latencyRules[0].record,
-          std.join(',', rulesSelectors),
+          alertSelectors,
           slo.latencyBudget,
           latencyRules[4].record,
-          std.join(',', rulesSelectors),
+          alertSelectors,
           slo.latencyBudget,
           latencyRules[1].record,
-          std.join(',', rulesSelectors),
+          alertSelectors,
           slo.latencyBudget,
         ],
         labels: util.selectorsToLabels(rulesSelectors) {
@@ -101,16 +102,16 @@ local util = import '_util.libsonnet';
           )
         ||| % [
           latencyRules[5].record,
-          std.join(',', rulesSelectors),
+          alertSelectors,
           slo.latencyBudget,
           latencyRules[3].record,
-          std.join(',', rulesSelectors),
+          alertSelectors,
           slo.latencyBudget,
           latencyRules[6].record,
-          std.join(',', rulesSelectors),
+          alertSelectors,
           slo.latencyBudget,
           latencyRules[4].record,
-          std.join(',', rulesSelectors),
+          alertSelectors,
           slo.latencyBudget,
         ],
         labels: util.selectorsToLabels(rulesSelectors) {
