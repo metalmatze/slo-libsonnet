@@ -10,7 +10,8 @@ local util = import '_util.libsonnet';
       // bucket. As recording rules rely on it.
       latencyTarget: error 'must set latencyTarget latency burn',
       latencyBudget: error 'must set latencyBudget latency burn',
-      labels: [],
+      alertLabels: {},
+      alertAnnotations: {},
       codeSelector: 'code',
       notErrorSelector: '%s!~"5.."' % slo.codeSelector,
     } + param,
@@ -81,10 +82,10 @@ local util = import '_util.libsonnet';
         ],
         labels: util.selectorsToLabels(rulesSelectors) {
           severity: 'critical',
-        },
+        } + slo.alertLabels,
         annotations: {
           message: 'High requests latency budget burn for %s (current value: {{ $value }})' % [std.strReplace(std.join(',', rulesSelectors), '"', '')],
-        },
+        } + slo.alertAnnotations,
       },
       {
         alert: slo.alertName,
@@ -116,10 +117,10 @@ local util = import '_util.libsonnet';
         ],
         labels: util.selectorsToLabels(rulesSelectors) {
           severity: 'warning',
-        },
+        } + slo.alertLabels,
         annotations: {
           message: 'High requests latency budget burn for %s (current value: {{ $value }})' % [std.strReplace(std.join(',', rulesSelectors), '"', '')],
-        },
+        } + slo.alertAnnotations,
       },
     ],
 

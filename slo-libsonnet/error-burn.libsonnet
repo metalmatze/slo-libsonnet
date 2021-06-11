@@ -5,6 +5,8 @@ local errors = import 'errors.libsonnet';
     local slo = {
       alertName: 'ErrorBudgetBurn',
       alertMessage: 'High error budget burn for %s (current value: {{ $value }})' % [std.strReplace(std.join(',', self.selectors), '"', '')],
+      alertLabels: {},
+      alertAnnotations: {},
       metric: error 'must set metric for error burn',
       recordingrule: '%s:burnrate%%s' % self.metric,  // double %% at the end as we template again further on
       selectors: [],
@@ -65,10 +67,10 @@ local errors = import 'errors.libsonnet';
           },
           labels: labels {
             severity: w.severity,
-          },
+          } + slo.alertLabels,
           annotations: {
             message: slo.alertMessage,
-          },
+          } + slo.alertAnnotations,
           'for': '%(for)s' % w,
         }
         for w in slo.windows

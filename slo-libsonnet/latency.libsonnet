@@ -4,6 +4,8 @@ local util = import '_util.libsonnet';
   latency(param):: {
     local slo = {
       metric: error 'must set metric for latency',
+      alertLabels: {},
+      alertAnnotations: {},
       selectors: error 'must set selectors for latency',
       quantile: error 'must set quantile for latency',
       labels: [],
@@ -37,7 +39,8 @@ local util = import '_util.libsonnet';
       'for': '5m',
       labels: labels {
         severity: 'warning',
-      },
+      } + slo.alertLabels,
+      annotations: slo.alertAnnotations,
     },
 
     alertCritical: {
@@ -47,7 +50,8 @@ local util = import '_util.libsonnet';
       'for': '5m',
       labels: labels {
         severity: 'critical',
-      },
+      } + slo.alertLabels,
+      annotations: slo.alertAnnotations,
     },
 
     grafana: {
