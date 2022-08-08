@@ -5,5 +5,6 @@
       std.split(s, '=')
       for s in labelset
     ]
+    if s[0] == std.strReplace(s[0], '!', '')
   },
 }
